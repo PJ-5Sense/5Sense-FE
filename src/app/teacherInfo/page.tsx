@@ -8,8 +8,6 @@ import plusIcon from '../../assets/icon/plusIcon.svg';
 import x_circle from '../../assets/icon/x_circle.svg';
 import closeIcon from '../../assets/icon/closeIcon.svg';
 import { useEffect, useState } from 'react'
-import { type } from "os";
-import { Container } from "postcss";
 
 export default function TeacherInfo() {
 
@@ -23,7 +21,7 @@ export default function TeacherInfo() {
         setTeacherName('');
     } 
 
-    let teacherList: {name: string}[] = [
+    const teacherList: {name: string}[] = [
         {name: '정은담'},
         {name: '엄세리'},
         {name: '윤태식'},
@@ -94,7 +92,6 @@ export default function TeacherInfo() {
                     </div>
                 </div>
                 <button className="w-[100%] h-[52px] bg-[#7354E8] rounded-lg text-[#FFF] text-[16px]font-semibold cursor-pointer hover:opacity-70" onClick={() => {
-                    //teacherList.push({name: `${newTeacherName}`});
                     setNewTeacherName('');
                     setNewTEacherPhoneNum('');
                     setAddTeacher(prev => !prev);
