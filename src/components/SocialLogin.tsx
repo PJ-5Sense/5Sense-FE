@@ -25,9 +25,8 @@ export default function SocialLoginBtn({socialLogo} :any) {
             textColor: 'text-[#374151]',
             alt: 'kakao',
             login: async function kakaoLogin() {
-                //window.location.href = ('https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=73091fa3b6e4332a44fc50f3b622c806&redirect_uri=http://localhost:3000/auth/kakao/callback')
                 //window.location.href = KAKAO_AUTH_URL;
-                //router.push('/loading');
+                router.push('/loading');
 
                 //window.location.href = 'https://kauth.kakao.com/oauth/authorize';
             }
@@ -40,9 +39,7 @@ export default function SocialLoginBtn({socialLogo} :any) {
             textColor: 'text-[#2BB500]',
             alt: 'naver',
             login: function naverLogin() {
-                //router.push('/loading');
-                //window.naver('wCIY4BCK_aQX4TYCnq8T', 'http://localhost:3000/naver_login');
-                //window.location.href = 'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=wCIY4BCK_aQX4TYCnq8T&state=test_STRING&redirect_uri=http://localhost:3000/naver_login'
+                router.push('/loading');
             }
         },
         {
@@ -53,9 +50,7 @@ export default function SocialLoginBtn({socialLogo} :any) {
             textColor: 'text-[#374151]',
             alt: 'google',
             login: function googleLogin() {
-                //router.push('/loading');
-                //window.naver('wCIY4BCK_aQX4TYCnq8T', 'http://localhost:3000/naver_login');
-                //window.location.href = 'https://accounts.google.com/o/oauth2/auth?client_id=1029862850093-6eekvfv1b0qulsj3stq9ldtiupivqmce.apps.googleusercontent.com&redirect_uri=http://localhost:3000/google_login&scope=profile email&response_type=code&access_type=offline'
+                router.push('/loading');
             }
         },
         
