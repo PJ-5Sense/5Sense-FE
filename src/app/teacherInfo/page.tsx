@@ -7,6 +7,7 @@ import vecterIcon from '../../assets/icon/vectorIcon.svg';
 import plusIcon from '../../assets/icon/plusIcon.svg';
 import x_circle from '../../assets/icon/x_circle.svg';
 import closeIcon from '../../assets/icon/closeIcon.svg';
+import userCircle from '../../assets/icon/user-circle.jpg';
 import { useEffect, useState, useRef } from 'react'
 
 export default function TeacherInfo() {
@@ -16,7 +17,7 @@ export default function TeacherInfo() {
     let [checkInclude, setCheckInclude] = useState<boolean>(false);
     let [addTeacher, setAddTeacher] = useState<boolean>(false);
     let [newTeacherName, setNewTeacherName] = useState<string>('');
-    let [newTeacherPhoneNum, setNewTEacherPhoneNum] = useState<string>('');
+    let [newTeacherPhoneNum, setNewTeacherPhoneNum] = useState<string>('');
     let [openTeacherList, setOpenTeacherList] = useState<boolean>(false);
     let [nameValue, setNameValue] = useState<string>('');
 
@@ -79,7 +80,7 @@ export default function TeacherInfo() {
                                 setNameValue(teacher.name);
                                 clickInput();
                                 }} >
-                                <Image src={userIcon} width={14} height={15} alt="" />
+                                <Image src={userCircle} width={14} height={15} alt="" />
                                 <div id="name" className="w-[100%] text-[14px] text-[#6B7280] font-normal">{teacher.name}</div>
                                 <Image src={vecterIcon} width={14} height={15} alt="" />
                             </div>
@@ -107,13 +108,13 @@ export default function TeacherInfo() {
                     </div>
                     <div className="w-[100%] h-[58px] border rounded-lg border-[#E5E7EB] bg-[#FFF] focus-within:border-[#7354E8]">
                         <input type="text" className="w-[100%] h-[100%] outline-none px-3 py-5 rounded-lg" placeholder="전화 번호" value={newTeacherPhoneNum} onChange={(e) => {
-                            setNewTEacherPhoneNum(e.target.value)
+                            setNewTeacherPhoneNum(e.target.value)
                         }} />
                     </div>
                 </div>
                 <button className="w-[100%] h-[52px] bg-[#7354E8] rounded-lg text-[#FFF] text-[16px]font-semibold cursor-pointer hover:opacity-70" onClick={() => {
                     setNewTeacherName('');
-                    setNewTEacherPhoneNum('');
+                    setNewTeacherPhoneNum('');
                     setAddTeacher(prev => !prev);
                     console.log(newTeacherName, newTeacherPhoneNum);
                 }}>등록</button>
