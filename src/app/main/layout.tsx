@@ -43,7 +43,7 @@ export default function MainLayout({
         </section>
         <section className="flex flex-col left-[336px] top-[72px] absolute">
           <Navbar />
-          <div className="w-[1536px] h-[990px] bg-white rounded-tr-2xl rounded-bl-2xl rounded-br-2xl shadow">
+          <div className="realtive w-[1536px] h-[990px] bg-white rounded-tr-2xl rounded-bl-2xl rounded-br-2xl shadow">
             {children}
           </div>
         </section>
