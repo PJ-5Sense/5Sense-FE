@@ -1,9 +1,10 @@
 import Image from "next/image"
 import { useState, useRef, useEffect, BaseSyntheticEvent } from 'react';
-import chevornDown from '../../assets/icons/chevron-down.svg';
-import chevornUp from '../../assets/icons/chevron-up.svg';
+import chevronDownBlue from '../../assets/icons/chevron-down-blue.svg';
+import chevronUpBlue from '../../assets/icons/chevron-up-blue.svg';
 import searchIcon from '../../assets/icons/search.svg';
-
+import chevronDownGray from '../../assets/icons/chevron-down-gray.svg';
+import chevronUpGray from '../../assets/icons/chevron-up-gray.svg';
 
 export default function ClassFilter() {
     //const teacherTypeRef = useRef<HTMLButtonElement>(null);
@@ -20,13 +21,61 @@ export default function ClassFilter() {
         {name: '정국'}
     ]
 
+    const category: {subject: string, detail: string[]}[] = [
+        {
+            subject: '미술',
+            detail: ['미술 1반', '미술 2반', '미술 3반', '미술 4반', '미술 5반']
+        },
+        {
+            subject: '연기',
+            detail: ['연기 1반', '연기 2반', '연기 3반', '연기 4반', '연기 5반']
+        },
+        {
+            subject: '공연',
+            detail: ['공연 1반', '공연 2반', '공연 3반', '공연 4반', '공연 5반']
+        },
+        {
+            subject: '체육',
+            detail: ['체육 1반', '체육 2반', '체육 3반', '체육 4반', '체육 5반']
+        },
+        {
+            subject: '댄스',
+            detail: ['댄스 1반', '댄스 2반', '댄스 3반', '댄스 4반', '댄스 5반']
+        },
+        {
+            subject: '보컬',
+            detail: ['보컬 1반', '보컬 2반', '보컬 3반', '보컬 4반', '보컬 5반']
+        },
+        {
+            subject: '프로듀싱',
+                detail: ['프로듀싱 1반', '프로듀싱 2반', '프로듀싱 3반', '프로듀싱 4반', '프로듀싱 5반'] 
+        },
+        {
+            subject: '연주',
+            detail: ['연주 1반', '연주 2반', '연주 3반', '연주 4반', '연주 5반']
+        },
+        {
+            subject: '기타',
+            detail: ['기타 1', '기타 2', '기타 3', '기타 4', '기타 5']
+        }
+    ]
+
 
     let [isClickedTimeFilter, setIsClickedTimeFilter] = useState<boolean>(false);
     let [isClickedTeacherFilter, setIsClickedTeacherFilter] = useState<boolean>(false);
-    let [test, setTest] = useState<string>('true');
+    let [isClickedCategoryFilter, setIsClickedCategoryFilter] = useState<boolean>(false);
+    //let [test, setTest] = useState<string>('true');
     let [classType, setClassType] = useState<string>('');
     let [searchTeacher, setSearchTeacher] = useState<string>('');
     let [checkedTeacherNameList, setCheckedTeacherNameList] = useState<string[]>([]);
+    let [onFocusFirstGroup, setOnFocusFirstGroup] = useState<boolean>(false);
+    let [onFocusSecondGroup, setOnFocusSecondGroup] = useState<boolean>(false);
+    let [groupClass, setGroupClass] = useState<{subject: string, key: null | number, detail: string}>({
+            subject: '',
+            key: null,
+            detail: ''
+        });
+
 
     function SearchTeacherName(event: React.ChangeEvent<HTMLInputElement>) {
         setSearchTeacher(event.target.value);
@@ -99,11 +148,11 @@ export default function ClassFilter() {
 
     return (
         <div className="absolute left-12 top-[120px] flex flex-col gap-2 h-[50px]">
-            <div className=" max-w-[375px] h-[37px] items-start gap-2 inline-flex">
+            <div className=" max-w-[375px] h-[37px] items-start gap-2 flex">
                 <button ref={classTypeRef} className="group flex items-center gap-2 w-[112px] h-full border px-3 py-2 rounded-lg border-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 focus:outline focus:outline-2.5 focus:outline-[#D3C4F9]"
                 onClick={onFocusTrue} /* onFocus={onFocusTrue} */ >
                     <span className="w-16 h-[21px] text-[11.5px] font-semibold font-['Pretendard'] leading-[21px] text-indigo-500 group-hover:text-white group-focus:text-white">{classType === '' ? '클래스 유형' : classType}</span>
-                    {isClickedTimeFilter ? <Image src={chevornUp} width={16} height={16} alt=" " /> : <Image src={chevornDown} width={16} height={16} alt=" " />}
+                    {isClickedTimeFilter ? <Image src={chevronUpBlue} width={16} height={16} alt=" " /> : <Image src={chevronDownBlue} width={16} height={16} alt=" " />}
                 </button>
                 <button ref={teacherNameTypeRef} className="group flex items-center gap-2 max-w-[150px] h-full px-3 py-2 border rounded-lg border-indigo-500  hover:bg-indigo-700 focus:bg-indigo-700 focus:outline focus:outline-2.5 focus:outline-[#D3C4F9] focus-within:text-white"
                 onClick={() => {
@@ -113,18 +162,21 @@ export default function ClassFilter() {
                         {checkedTeacherNameList.length === 0 ? '강사명' : getCheckedName() }
                         
                     </span>
-                    <Image src={chevornDown} width={16} height={16} alt=" " />
+                    <Image src={chevronDownBlue} width={16} height={16} alt=" " />
                 </button>
-                <button className="group flex items-center gap-2 w-[97px] h-full px-3 py-2 border rounded-lg border-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 focus:outline focus:outline-2.5 focus:outline-[#D3C4F9]">
-                    <span className="w-[49px] h-[21px] text-[11.5px] font-semibold font-['Pretendard'] leading-[21px] text-indigo-500 group-hover:text-white group-focus:text-white">카테고리</span>
-                    <Image src={chevornDown} width={16} height={16} alt=" " />
+                <button className="group flex items-center gap-2 w-[97px] h-full px-3 py-2 border rounded-lg border-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 focus:outline focus:outline-2.5 focus:outline-[#D3C4F9]"
+                onClick={() => {
+                    setIsClickedCategoryFilter(prev => !prev)
+                }}>
+                    <span className="w-[49px] h-[21px] text-[11.5px] font-semibold font-['Pretendard'] leading-[21px] text-indigo-500 group-hover:text-white group-focus:text-white">{groupClass.detail !== '' ? groupClass.detail : '카테고리'}</span>
+                    <Image src={chevronDownBlue} width={16} height={16} alt=" " />
                 </button>
             </div>
             <div className="relative"> {/* 필터링 UI 기준점 */}
             {/* 기반반/회차반 필터링 */}
             {isClickedTimeFilter ?
-            <div ref={classTypeRefClick} className="w-[195px] flex flex-col p-4 border rounded-lg border-gray-300 shadow-[0_1px_2px_0_rgba(0,0,0,0.08)] bg-white">
-            <div id="classTypeFilter" className="w-[163px] h-[54] flex flex-col gap-3 ">
+            <div ref={classTypeRefClick} className="absolute w-[150px] flex flex-col p-4 border rounded-lg border-gray-300 shadow-[0_1px_2px_0_rgba(0,0,0,0.08)] bg-white">
+            <div id="classTypeFilter" className="w-[130px] h-[54] flex flex-col gap-3 ">
                 <p className="flex gap-2 items-center" >
                     <input type="radio" id="timeClass" name="classType" value="회차반" onChange={radioHandler} />
                     <label htmlFor="timeClass" className="text-gray-900 text-sm font-semibold font-['Pretendard'] leading-[21px]">회차반</label>
@@ -137,7 +189,7 @@ export default function ClassFilter() {
             </div> : null}
             {/* 강사이름 필터링 */}
             {isClickedTeacherFilter ? 
-            <div ref={teacherNameTypeRefClick} className="absolute top-0 left-[120px] flex gap-[5px] w-[195px] py-4 pl-4 pr-2 border rounded-lg border-gray-300 bg-white shadow-[0_1px_2px_0_rgba(0,0,0,0.08)]">
+            <div ref={teacherNameTypeRefClick} className="absolute left-[120px] flex gap-[5px] w-[195px] py-4 pl-4 pr-2 border rounded-lg border-gray-300 bg-white shadow-[0_1px_2px_0_rgba(0,0,0,0.08)]">
             <div className="w-full flex flex-col gap-3">
                 <div className="w-full h-[42px] p-3 border rounded-lg border-gray-200 bg-gray-50 flex gap-2 focus:border-none focus-within:ring-1 focus-within:ring-[#7354E8]">
                     <Image src={searchIcon} width={18} height={18} alt=" " />
@@ -151,7 +203,7 @@ export default function ClassFilter() {
                     <div className="max-h-[150px]  flex flex-col items-center gap-3 overflow-auto ">
                     {teacherInfo.map((teacher, i) => {
                         return(
-                        <div className="w-full h-4 flex items-center gap-2">
+                        <div key={i} className="w-full h-4 flex items-center gap-2">
                             {checkedTeacherNameList.includes(teacher.name) ? 
                             <input type="checkbox" id={teacher.name} value={teacher.name} checked className="hover:cursor-pointer focus:ring-transparent ring-0 focus:outline-0 rounded"
                             onChange={(e) => {
@@ -183,7 +235,7 @@ export default function ClassFilter() {
                 {teacherInfo.map((teacher, i) => {
                     if(teacher.name.includes(searchTeacher)) {
                         return(
-                        <div className="w-full flex items-center gap-2">
+                        <div key={i} className="w-full flex items-center gap-2">
                             <Image src={searchIcon} width={14} height={14} alt=" " />
                             <span className="text-[#7354E8] text-sm font-normal font-['Pretendard'] leading-[21px] hover:cursor-pointer" id={teacher.name} onClick={(e) => {
                                 //console.log(e.currentTarget)
@@ -200,17 +252,76 @@ export default function ClassFilter() {
                             </span>
                             {/* 앞 순서부터만 색 변경 가능 이슈 고치기 */}
                         </div>
-                        )
-                    }
-                })}
+                            )
+                        }
+                    })}
+                    </div>
+                    : null}
                 </div>
-                : null}
+                </div> : null}
+            {/* 카테고리명 대분류/소분류 필터링 */}
+            {isClickedCategoryFilter ? 
+            <div className="absolute left-[212.5px] flex flex-col w-[195px] h-auto p-4 gap-3 border rounded-lg border-gray-300 bg-white shadow-[0_1px_2px_0_rgba(0,0,0,0.08)]">
+            <div className="relative">
+            <button className="z-0 flex items-center w-full h-[42px] p-3 border rounded-lg border-gray-300 bg-white focus:border-indigo-500" 
+            onClick={() => {
+                setOnFocusFirstGroup(prev => !prev);
+            }}>
+                <span className="w-[90%] text-left text-gray-500 text-sm font-normal font-['Pretendard']">{groupClass.subject !== '' ? groupClass.subject : '대분류 선택'}</span>
+                <Image className="" src={onFocusFirstGroup ? chevronUpGray : chevronDownGray} width={16} height={16} alt=' ' />
+            </button>
+            {/* 대분류 필터링 */}
+            {onFocusFirstGroup ? 
+            <div className="overflow-hidden">
+                <div className="z-10 absolute w-full max-h-[144px] overflow-auto p-1 border border-indigo-500 rounded-md bg-white">
+                    {category.map((group, i) => {
+                        return(
+                            <div key={i} id={group.subject} className="rounded-[3px] px-2 py-1 text-gray-900 text-sm font-normal font-['Pretendard'] hover:bg-purple-100" 
+                            onClick={(e) => {
+                                setGroupClass({
+                                    ...groupClass,
+                                    subject: e.currentTarget.id,
+                                    key: i
+                                })
+                            }}>{group.subject}</div>
+                        )
+                    })}
+                </div>
+            </div> : null}
+            
+            </div>
+            <div className="relative">
+                <button className="z-0 flex items-center w-full h-[42px] p-3 border rounded-lg border-gray-300 bg-white focus:border-indigo-500"
+                onClick={() => {
+                    setOnFocusSecondGroup(prev => !prev);
+                }}>
+                    <span className="w-[90%] text-left text-gray-500 text-sm font-normal font-['Pretendard']">{groupClass.detail !== '' ? groupClass.detail : '소분류 선택'}</span>
+                    <Image className="" src={onFocusSecondGroup ? chevronUpGray : chevronDownGray} width={16} height={16} alt=' ' />
+                </button>
+                {/* 소분류 필터링 */}
+                {groupClass.key !== null && onFocusSecondGroup ? 
+                <div className="overflow-hidden">
+                    <div className="z-10 absolute w-full max-h-[144px] overflow-auto p-1 border border-indigo-500 rounded-md bg-white">
+                        {category[groupClass.key].detail.map((detailValue, i) => {
+                            return(
+                                <div key={i} id={detailValue} className="rounded-[3px] px-2 py-1 text-gray-900 text-sm font-normal font-['Pretendard'] hover:bg-purple-100" 
+                                onClick={(e) => {
+                                    console.log(e.currentTarget.id);
+                                    setGroupClass({
+                                        ...groupClass,
+                                        detail: detailValue 
+                                    })
+                                    //setFirstGroupClass(e.currentTarget.id)
+                                }}>{detailValue}</div>
+                            )
+                        })}
+                    </div>
+                </div> : null}
                 
             </div>
+            </div> : null}
             
-        </div> : null}
-            
-            </div>
         </div>
+    </div>
     )
 }
