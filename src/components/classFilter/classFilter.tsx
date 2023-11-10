@@ -87,9 +87,6 @@ export default function ClassFilter() {
         //console.log(onFocusFilterBtn);
     }
 
-    function onFocusFalse() {
-        setIsClickedTimeFilter(false);
-    }
 
     const radioHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log(event.target)
@@ -150,13 +147,15 @@ export default function ClassFilter() {
         <div className="absolute left-12 top-[120px] flex flex-col gap-2 h-[50px]">
             <div className=" max-w-[375px] h-[37px] items-start gap-2 flex">
                 <button ref={classTypeRef} className="group flex items-center gap-2 w-[112px] h-full border px-3 py-2 rounded-lg border-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 focus:outline focus:outline-2.5 focus:outline-[#D3C4F9]"
-                onClick={onFocusTrue} /* onFocus={onFocusTrue} */ >
+                onClick={() => {
+                    setIsClickedTimeFilter(prev => !prev)
+                }} /* onFocus={onFocusTrue} */ >
                     <span className="w-16 h-[21px] text-[11.5px] font-semibold font-['Pretendard'] leading-[21px] text-indigo-500 group-hover:text-white group-focus:text-white">{classType === '' ? '클래스 유형' : classType}</span>
                     {isClickedTimeFilter ? <Image src={chevronUpBlue} width={16} height={16} alt=" " /> : <Image src={chevronDownBlue} width={16} height={16} alt=" " />}
                 </button>
                 <button ref={teacherNameTypeRef} className="group flex items-center gap-2 max-w-[150px] h-full px-3 py-2 border rounded-lg border-indigo-500  hover:bg-indigo-700 focus:bg-indigo-700 focus:outline focus:outline-2.5 focus:outline-[#D3C4F9] focus-within:text-white"
                 onClick={() => {
-                    setIsClickedTeacherFilter(true);
+                    setIsClickedTeacherFilter(prev => !prev);
                 }}>
                     <span className="max-w-[110px] h-[21px] text-[11.5px] font-semibold font-['Pretendard'] leading-[21px] text-indigo-500 group-hover:text-white group-focus:text-white">
                         {checkedTeacherNameList.length === 0 ? '강사명' : getCheckedName() }
@@ -282,13 +281,13 @@ export default function ClassFilter() {
                                     ...groupClass,
                                     subject: e.currentTarget.id,
                                     key: i
-                                })
+                                });
+                                setOnFocusFirstGroup(false);
                             }}>{group.subject}</div>
                         )
                     })}
                 </div>
             </div> : null}
-            
             </div>
             <div className="relative">
                 <button className="z-0 flex items-center w-full h-[42px] p-3 border rounded-lg border-gray-300 bg-white focus:border-indigo-500"
@@ -311,6 +310,7 @@ export default function ClassFilter() {
                                         ...groupClass,
                                         detail: detailValue 
                                     })
+                                    setOnFocusSecondGroup(false);
                                     //setFirstGroupClass(e.currentTarget.id)
                                 }}>{detailValue}</div>
                             )
