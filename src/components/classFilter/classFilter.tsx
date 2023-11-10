@@ -208,9 +208,8 @@ export default function ClassFilter() {
                 }}>
                     <span className="max-w-[110px] h-[21px] text-[11.5px] font-semibold font-['Pretendard'] leading-[21px] text-indigo-500 group-hover:text-white group-focus:text-white">
                         {checkedTeacherNameList.length === 0 ? '강사명' : getCheckedName() }
-                        
                     </span>
-                    <Image src={chevronDownBlue} width={16} height={16} alt=" " />
+                    {isClickedTeacherFilter ? <Image src={chevronUpBlue} width={16} height={16} alt=" " /> : <Image src={chevronDownBlue} width={16} height={16} alt=" " />}
                 </button>
                 <button ref={categoryTypeRef} className="group flex items-center gap-2 w-[97px] h-full px-3 py-2 border rounded-lg border-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 focus:outline focus:outline-2.5 focus:outline-[#D3C4F9]"
                 onClick={() => {
@@ -218,7 +217,7 @@ export default function ClassFilter() {
                     //setIsClickedCategoryFilter(prev => !prev)
                 }}>
                     <span className="w-[49px] h-[21px] text-[11.5px] font-semibold font-['Pretendard'] leading-[21px] text-indigo-500 group-hover:text-white group-focus:text-white">{groupClass.detail !== '' ? groupClass.detail : '카테고리'}</span>
-                    <Image src={chevronDownBlue} width={16} height={16} alt=" " />
+                    {isClickedCategoryFilter ? <Image src={chevronUpBlue} width={16} height={16} alt=" " /> : <Image src={chevronDownBlue} width={16} height={16} alt=" " />}
                 </button>
             </div>
             <div className="relative"> {/* 필터링 UI 기준점 */}
