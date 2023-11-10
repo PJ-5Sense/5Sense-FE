@@ -5,6 +5,7 @@ import chevronUpBlue from '../../assets/icons/chevron-up-blue.svg';
 import searchIcon from '../../assets/icons/search.svg';
 import chevronDownGray from '../../assets/icons/chevron-down-gray.svg';
 import chevronUpGray from '../../assets/icons/chevron-up-gray.svg';
+import { useOnClickOutside } from "../useOnclickOutside";
 
 export default function ClassFilter() {
     //const teacherTypeRef = useRef<HTMLButtonElement>(null);
@@ -61,7 +62,7 @@ export default function ClassFilter() {
     ]
 
 
-    let [isClickedTimeFilter, setIsClickedTimeFilter] = useState<boolean>(false);
+    let [isClickedClassFilter, setIsClickedClassFilter] = useState<boolean>(false);
     let [isClickedTeacherFilter, setIsClickedTeacherFilter] = useState<boolean>(false);
     let [isClickedCategoryFilter, setIsClickedCategoryFilter] = useState<boolean>(false);
     //let [test, setTest] = useState<string>('true');
@@ -82,7 +83,7 @@ export default function ClassFilter() {
     }
 
     function onFocusTrue() {
-        setIsClickedTimeFilter(true);
+        setIsClickedClassFilter(true);
         //setTest('true')
         //console.log(onFocusFilterBtn);
     }
@@ -91,7 +92,7 @@ export default function ClassFilter() {
     const radioHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.log(event.target)
         setClassType(event.target.value);
-        setIsClickedTimeFilter(false);
+        setIsClickedClassFilter(false);
     };
 
     function getCheckedName() {
@@ -113,9 +114,57 @@ export default function ClassFilter() {
     const classTypeRefClick = useRef<HTMLDivElement>(null);
     const teacherNameTypeRef = useRef<HTMLButtonElement>(null);
     const teacherNameTypeRefClick = useRef<HTMLDivElement>(null);
+    const categoryTypeRef = useRef<HTMLButtonElement>(null);
+    const categoryTypeRefClick = useRef<HTMLDivElement>(null);
 
-    /* 클래스 유형 제어 */
-    useEffect(() => {
+    const handleClickCategoryOutside = (e: any) => {
+        //console.log('outside');
+        //console.log(categoryTypeRefClick.current?.contains(e.target));
+
+        if(isClickedCategoryFilter && !categoryTypeRefClick.current?.contains(e.target)){
+            setIsClickedCategoryFilter(false);
+        }
+
+    }
+
+    const handleClickCategoryInside = () => {
+        setIsClickedCategoryFilter(prev => !prev);
+        
+    }
+
+    const handleClickClassOutside = (e: any) => {
+        //console.log('class outside');
+        if(isClickedClassFilter && !classTypeRefClick.current?.contains(e.target)){
+            setIsClickedClassFilter(false);
+        }
+    }
+
+    const handleCLickClassInside = () => {
+        //console.log('class inside');
+        setIsClickedClassFilter(prev => !prev);
+    }
+
+    const handleClickTeacherOutside = (e: any) => {
+        //console.log('click outside');
+        if(isClickedTeacherFilter && !teacherNameTypeRefClick.current?.contains(e.target)){
+            setIsClickedTeacherFilter(false);
+        }
+    }
+
+    const handleClickTeacherInside = () => {
+        //console.log('click inside');
+        setIsClickedTeacherFilter(prev => !prev);
+    }
+    /* 카테고리 영역 밖 클릭 */
+    useOnClickOutside(categoryTypeRef, handleClickCategoryOutside);
+    /* 클래스 필터링 영역 밖 클릭 */
+    useOnClickOutside(classTypeRef, handleClickClassOutside);
+    /* 강사명 필터링 영역 밖 클릭 */
+    useOnClickOutside(teacherNameTypeRef, handleClickTeacherOutside);
+
+
+    /* 클래스 필터링 영역 밖 클릭 */
+    /* useEffect(() => {
         const clickOutsideTimeFilter = (e: any) => {
             if (!isClickedTimeFilter && !classTypeRefClick.current?.contains(e.target) && !classTypeRef.current?.contains(e.target)) {
               setIsClickedTimeFilter(false);
@@ -126,10 +175,10 @@ export default function ClassFilter() {
           return () => {
             document.removeEventListener('mousedown', clickOutsideTimeFilter)
           }
-    }, [classTypeRefClick, classTypeRef]);
+    }, [classTypeRefClick, classTypeRef]); */
 
-    /* 강사명 제어 */
-    useEffect(() => {
+    /* 강사명 필터링 영역 밖 클릭 */
+    /* useEffect(() => {
         const clickOutsideTeacherFilter = (e: any) => {
             if(!isClickedTeacherFilter && !teacherNameTypeRef.current?.contains(e.target) && !teacherNameTypeRefClick.current?.contains(e.target)){
                 setIsClickedTeacherFilter(false);
@@ -139,7 +188,7 @@ export default function ClassFilter() {
           return () => {
             document.removeEventListener('mousedown', clickOutsideTeacherFilter)
           }
-    }, [teacherNameTypeRef, teacherNameTypeRefClick])
+    }, [teacherNameTypeRef, teacherNameTypeRefClick]) */
       
     //console.log(classType)
 
@@ -147,15 +196,15 @@ export default function ClassFilter() {
         <div className="absolute left-12 top-[120px] flex flex-col gap-2 h-[50px]">
             <div className=" max-w-[375px] h-[37px] items-start gap-2 flex">
                 <button ref={classTypeRef} className="group flex items-center gap-2 w-[112px] h-full border px-3 py-2 rounded-lg border-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 focus:outline focus:outline-2.5 focus:outline-[#D3C4F9]"
-                onClick={() => {
-                    setIsClickedTimeFilter(prev => !prev)
-                }} /* onFocus={onFocusTrue} */ >
+                onClick={(e) => {
+                    handleCLickClassInside();
+                }} >
                     <span className="w-16 h-[21px] text-[11.5px] font-semibold font-['Pretendard'] leading-[21px] text-indigo-500 group-hover:text-white group-focus:text-white">{classType === '' ? '클래스 유형' : classType}</span>
-                    {isClickedTimeFilter ? <Image src={chevronUpBlue} width={16} height={16} alt=" " /> : <Image src={chevronDownBlue} width={16} height={16} alt=" " />}
+                    {isClickedClassFilter ? <Image src={chevronUpBlue} width={16} height={16} alt=" " /> : <Image src={chevronDownBlue} width={16} height={16} alt=" " />}
                 </button>
                 <button ref={teacherNameTypeRef} className="group flex items-center gap-2 max-w-[150px] h-full px-3 py-2 border rounded-lg border-indigo-500  hover:bg-indigo-700 focus:bg-indigo-700 focus:outline focus:outline-2.5 focus:outline-[#D3C4F9] focus-within:text-white"
                 onClick={() => {
-                    setIsClickedTeacherFilter(prev => !prev);
+                    handleClickTeacherInside();
                 }}>
                     <span className="max-w-[110px] h-[21px] text-[11.5px] font-semibold font-['Pretendard'] leading-[21px] text-indigo-500 group-hover:text-white group-focus:text-white">
                         {checkedTeacherNameList.length === 0 ? '강사명' : getCheckedName() }
@@ -163,9 +212,10 @@ export default function ClassFilter() {
                     </span>
                     <Image src={chevronDownBlue} width={16} height={16} alt=" " />
                 </button>
-                <button className="group flex items-center gap-2 w-[97px] h-full px-3 py-2 border rounded-lg border-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 focus:outline focus:outline-2.5 focus:outline-[#D3C4F9]"
+                <button ref={categoryTypeRef} className="group flex items-center gap-2 w-[97px] h-full px-3 py-2 border rounded-lg border-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 focus:outline focus:outline-2.5 focus:outline-[#D3C4F9]"
                 onClick={() => {
-                    setIsClickedCategoryFilter(prev => !prev)
+                    handleClickCategoryInside();
+                    //setIsClickedCategoryFilter(prev => !prev)
                 }}>
                     <span className="w-[49px] h-[21px] text-[11.5px] font-semibold font-['Pretendard'] leading-[21px] text-indigo-500 group-hover:text-white group-focus:text-white">{groupClass.detail !== '' ? groupClass.detail : '카테고리'}</span>
                     <Image src={chevronDownBlue} width={16} height={16} alt=" " />
@@ -173,7 +223,7 @@ export default function ClassFilter() {
             </div>
             <div className="relative"> {/* 필터링 UI 기준점 */}
             {/* 기반반/회차반 필터링 */}
-            {isClickedTimeFilter ?
+            {isClickedClassFilter ?
             <div ref={classTypeRefClick} className="absolute w-[150px] flex flex-col p-4 border rounded-lg border-gray-300 shadow-[0_1px_2px_0_rgba(0,0,0,0.08)] bg-white">
             <div id="classTypeFilter" className="w-[130px] h-[54] flex flex-col gap-3 ">
                 <p className="flex gap-2 items-center" >
@@ -260,7 +310,7 @@ export default function ClassFilter() {
                 </div> : null}
             {/* 카테고리명 대분류/소분류 필터링 */}
             {isClickedCategoryFilter ? 
-            <div className="absolute left-[212.5px] flex flex-col w-[195px] h-auto p-4 gap-3 border rounded-lg border-gray-300 bg-white shadow-[0_1px_2px_0_rgba(0,0,0,0.08)]">
+            <div ref={categoryTypeRefClick} className="absolute left-[212.5px] flex flex-col w-[195px] h-auto p-4 gap-3 border rounded-lg border-gray-300 bg-white shadow-[0_1px_2px_0_rgba(0,0,0,0.08)]">
             <div className="relative">
             <button className="z-0 flex items-center w-full h-[42px] p-3 border rounded-lg border-gray-300 bg-white focus:border-indigo-500" 
             onClick={() => {
