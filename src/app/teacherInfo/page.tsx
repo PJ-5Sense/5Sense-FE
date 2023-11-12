@@ -95,7 +95,9 @@ export default function TeacherInfo() {
             {openTeacherList ? 
             <div ref={autoCompleteTeacherNameRef} className=" flex flex-col w-[100%] h-[auto] p-4 border rounded-lg items-center gap-3 bg-[#FFF] border-[#E5E7EB] shadow-[0px_1px_2px_0px_rgba(0, 0, 0, 0.08)]">
                 <div className="w-[100%] text-[14px] font-semibold">강사 이름</div>
-                {teacherList.map((teacher, index) => {
+                <div className=" w-full overflow-hidden">
+                    <div className="max-h-[185px] overflow-y-scroll">
+                    {teacherList.map((teacher, index) => {
                     if(teacher.name.includes(teacherName)){
                         return(
                             <div data-teachername={teacher.name} key={index} className="flex w-[100%] px-3 py-2 items-center rounded-lg gap-2 bg-[#F9FAFB] cursor-pointer hover:opacity-70" onClick={e => {
@@ -113,6 +115,8 @@ export default function TeacherInfo() {
                             )       
                         }
                     })}
+                    </div>    
+                </div>
                 <div className="flex w-[100%] h-[auto] pt-3 border-t border-t-[#E5E7EB] gap-3">
                     <Image src={plusIcon} width={14} height={15} alt="" />
                     <div className="text-[14px] text-[#7354E8] font-semibold cursor-pointer" onClick={() => {setAddTeacher(prev => !prev)}}>강사 추가</div>
