@@ -1,3 +1,3 @@
 export default function Main() {
-  return <section></section>
+  return <div></div>
 }

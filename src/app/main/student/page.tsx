@@ -1,8 +1,14 @@
+'use client'
+import { Alert } from 'flowbite-react'
+
 export default function StudentPage() {
   return (
-    <section>
-      <button className="w-[85px] h-[37px]"> 필터링 </button>
-      <div></div>
-    </section>
+    <div>
+      <Alert color="info">
+        <span className="font-medium">Info alert!</span> Change a few things up
+        and try submitting again.
+        <></>
+      </Alert>
+    </div>
   )
 }

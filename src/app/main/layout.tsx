@@ -1,8 +1,9 @@
-import Navbar from '@/components/Navbar'
-import ProfileBtn from '@/components/btn/ProfileBtn'
+import Navbar from '@/components/main/Navbar'
 import Image from 'next/image'
-import mainlogo from '@/assets/logo/mainlogo.svg'
-import profile from '@/assets/images/profile.png'
+import mainLogo from '@/assets/logo/mainLogo.png'
+import logout from '@/assets/icons/logout.svg'
+import noticeActive from '@/assets/icons/notice-active.svg'
+import menu from '@/assets/icons/menu.svg'
 
 export default function MainLayout({
   children
@@ -10,44 +11,38 @@ export default function MainLayout({
   children: React.ReactNode
 }) {
   return (
-    <main className="w-full max-w-screen-3xl min-w-screen-md bg-primary max-h-screen-h-3xl">
-      <div className="w-[1920px] h-[469px] relative flex flex-row bg-gradient-to-b from-indigo-500 to-violet-500">
-        <section className="Info w-[40.67px] h-[40.67px] left-[24px] top-[48px] absolute">
-          <div className="Logo flex flex-row items-center gap-[6px]">
-            <Image src={mainlogo} width={52} height={52} alt="mainlogo"></Image>
-            <span className="Sense text-slate-50 text-xl font-bold font-['Poppins']">
-              5sense
-            </span>
+    <div className="wrapper ">
+      <div className="purplebox w-full min-w-[768px] h-[601px] lg:h-[469px] bg-gradient-to-b from-[#6F53DB] to-[#875EDC]"></div>
+      <div className="fullbox absolute top-0 left-0 w-full min-w-[768px] max-w-[1920px] px-6 md:px-12 lg:pr-6 lg:pl-0 box-border">
+        <div className="header">
+          <div className="logoBox absolute top-8 lg:top-12 left-6 md:left-12 lg:left-6 flex w-[52px] items-center">
+            <Image className="mr-[20px] lg:hidden" src={menu} alt="메뉴" />
+            <Image className="mr-[6px]" src={mainLogo} alt="로고" />
+            <span className="text-slate-50 text-xl font-bold ">5Sense</span>
           </div>
-          <div className="UserInfo flex flex-col items-center w-[288px] h-[251px] mt-20">
-            <Image
-              src={profile}
-              width={88}
-              height={88}
-              alt="profile"
-              className="Profile1 w-[88px] h-[88px] rounded-full"
-            />
-            <div className="content flex flex-col items-center gap-[8px] mb-7">
-              <h3 className="Text text-center text-white text-[21px] font-bold font-['Pretendard'] leading-loose">
-                매직기구필라테스
-              </h3>
-              <span className="Text text-center text-indigo-50 text-sm font-medium font-['Pretendard'] leading-[14px]">
-                031-706-1281
+          <div className="iconBox absolute top-[43px] lg:top-[37px] right-6 md:right-12 lg:right-6 flex items-center gap-[27px]">
+            <Image src={logout} alt="로그아웃" />
+            <Image src={noticeActive} alt="활성알림" />
+          </div>
+        </div>
+        <div className="content flex w-full min-w-[720px] max-w-[1872px]">
+          <div className="academyInfo hidden lg:academy-info">학원정보</div>
+          <div className="service relative top-[124px] lg:top-[66px] w-full">
+            <Navbar />
+            <div className="relative w-full 3xl:min-h-[1271px] bg-white rounded-2xl">
+              {children}
+            </div>
+            <div className="footer relative bottom-0 pt-12 pb-[22px]">
+              <span className="text-gray-300 text-xl font-bold font-['Poppins'] mr-[56px]">
+                5sense
               </span>
-              <span className="Text w-72 text-center text-indigo-50 text-xs font-medium font-['Pretendard'] leading-3">
-                경기 성남시 분당구 판교로256번길 19
+              <span className="text-gray-300 text-sm font-medium font-['Pretendard'] leading-[14px]">
+                Copyright ⓒ2023 5sense inc, ltd. All rights reserved
               </span>
             </div>
-            <ProfileBtn />
           </div>
-        </section>
-        <section className="flex flex-col left-[336px] top-[72px] absolute">
-          <Navbar />
-          <div className="w-[1536px] h-[990px] bg-white rounded-tr-2xl rounded-bl-2xl rounded-br-2xl shadow">
-            {children}
-          </div>
-        </section>
+        </div>
       </div>
-    </main>
+    </div>
   )
 }
