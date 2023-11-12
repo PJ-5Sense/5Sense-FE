@@ -9,9 +9,26 @@ import x_circle from '../../assets/icon/x_circle.svg';
 import closeIcon from '../../assets/icon/closeIcon.svg';
 import userCircle from '../../assets/icon/user-circle.jpg';
 import { useEffect, useState, useRef } from 'react'
+import { useOnClickOutside } from "@/components/useOnclickOutside";
 
 export default function TeacherInfo() {
 
+    const inputClickRef = useRef<HTMLInputElement>(null);
+    const autoCompleteTeacherNameRef = useRef<HTMLDivElement>(null);
+
+    const handleClickOutsideOfInput = (e: any) => {
+        if(openTeacherList && !autoCompleteTeacherNameRef.current?.contains(e.target)){
+            setOpenTeacherList(false);
+        }
+        console.log('outside');
+    }
+
+    const handleClickInsideOfInput = () => {
+        setOpenTeacherList(prev => !prev);
+        console.log('inside');
+    }
+    
+    useOnClickOutside(inputClickRef, handleClickOutsideOfInput);
 
     let [teacherName, setTeacherName] = useState<string>('');
     let [checkInclude, setCheckInclude] = useState<boolean>(false);
@@ -21,9 +38,9 @@ export default function TeacherInfo() {
     let [openTeacherList, setOpenTeacherList] = useState<boolean>(false);
     let [nameValue, setNameValue] = useState<string>('');
 
-    function clickInput() {
+    /* function clickInput() {
         setOpenTeacherList(prev => !prev);
-    }
+    } */
 
     function emptyInput() {
         setTeacherName('');
@@ -35,15 +52,20 @@ export default function TeacherInfo() {
         {name: '윤태식'},
         {name: '조영은'},
         {name: '조성훈'},
+        {name: '정은담'},
+        {name: '엄세리'},
+        {name: '윤태식'},
+        {name: '조영은'},
+        {name: '조성훈'},
     ]
 
-    useEffect(() => {
+    /* useEffect(() => {
         document.addEventListener('click', function(e: any) {
             if(openTeacherList && e.target.id !== 'teacherName') {
                 setOpenTeacherList(false);
             }
         })
-    }, [openTeacherList])
+    }, [openTeacherList]) */
 
     console.log(teacherName);
 
@@ -54,8 +76,11 @@ export default function TeacherInfo() {
             <div className="flex flex-start flex-col w-[100%] h-[auto] px-4 py-[14px] justify-center border border-[#E5E7EB] bg-[#F9FAFB] rounded-lg focus-within:border-[#7354E8]">
                 <div className="relative flex w-[100%] items-center gap-2">
                     <Image src={searchIcon} width={18} height={18} alt="search" /> 
-                    <input id="teacherName" className="w-[100%] text-[16px] text-[#111928] font-normal leading-6 outline-none" placeholder="강사 이름을 입력해주세요" value={teacherName} 
-                    onFocus={clickInput}
+                    <input ref={inputClickRef}  className="w-[100%] text-[16px] text-[#111928] font-normal leading-6 outline-none" placeholder="강사 이름을 입력해주세요" value={teacherName} 
+                    onClick={() => {
+                        //clickInput
+                        handleClickInsideOfInput()
+                    }}
                     onChange={(e) => {
                         setTeacherName(e.target.value);
                     }} />
@@ -68,7 +93,7 @@ export default function TeacherInfo() {
                 </div>
             </div>
             {openTeacherList ? 
-            <div className=" flex flex-col w-[100%] h-[auto] p-4 border rounded-lg items-center gap-3 bg-[#FFF] border-[#E5E7EB] shadow-[0px_1px_2px_0px_rgba(0, 0, 0, 0.08)]">
+            <div ref={autoCompleteTeacherNameRef} className=" flex flex-col w-[100%] h-[auto] p-4 border rounded-lg items-center gap-3 bg-[#FFF] border-[#E5E7EB] shadow-[0px_1px_2px_0px_rgba(0, 0, 0, 0.08)]">
                 <div className="w-[100%] text-[14px] font-semibold">강사 이름</div>
                 {teacherList.map((teacher, index) => {
                     if(teacher.name.includes(teacherName)){
@@ -78,15 +103,16 @@ export default function TeacherInfo() {
                                 setTeacherName(name);
                                 setCheckInclude(prev => !prev);
                                 setNameValue(teacher.name);
-                                clickInput();
+                                setOpenTeacherList(prev => !prev);
+                                //clickInput();
                                 }} >
                                 <Image src={userCircle} width={14} height={15} alt="" />
                                 <div id="name" className="w-[100%] text-[14px] text-[#6B7280] font-normal">{teacher.name}</div>
                                 <Image src={vecterIcon} width={14} height={15} alt="" />
                             </div>
-                        )       
-                    }
-                })}
+                            )       
+                        }
+                    })}
                 <div className="flex w-[100%] h-[auto] pt-3 border-t border-t-[#E5E7EB] gap-3">
                     <Image src={plusIcon} width={14} height={15} alt="" />
                     <div className="text-[14px] text-[#7354E8] font-semibold cursor-pointer" onClick={() => {setAddTeacher(prev => !prev)}}>강사 추가</div>
