@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import RecoilContextProvider from './recoilContextProvider'
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -11,11 +12,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-
   return (
     <html lang="en">
       <body className="relative w-full h-full min-w-[768px] min-h-[1024px] bg-primary-50">
-        {children}
+        <RecoilContextProvider>{children}</RecoilContextProvider>
       </body>
     </html>
   )
