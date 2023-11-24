@@ -7,7 +7,7 @@
     @apply flex flex-col justify-center items-center;
   }
   .academy-info {
-    @apply block relative top-[180px] w-[248px] h-[251px] box-content px-5 2xl:px-6 3xl:px-5 border-2 border-slate-950 border-solid;
+    @apply mt-[130px] w-[248px] h-[251px] flex flex-col justify-center flex-shrink-0;
   }
   .menu-title {
     @apply text-black text-3xl font-bold font-['Pretendard'];

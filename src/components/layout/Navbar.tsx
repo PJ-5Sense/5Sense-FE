@@ -48,7 +48,7 @@ export default function Navbar() {
   console.log(pathname)
 
   return (
-    <div className="flex w-[700px] md:w-[95%] lg:[879px] translate-y-[16px]">
+    <div className="flex w-[720px] xl:w-[879px] translate-y-[16px]">
       {menu.map(menu => (
         <Link
           className={`link ${
