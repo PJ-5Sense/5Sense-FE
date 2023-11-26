@@ -27,14 +27,14 @@
   .m-placeholder {
     @apply text-gray-300 text-2xl font-semibold font-['Pretendard'];
   }
-  .nav-active {
-    @apply bg-white text-primary-500 text-lg;
-  }
   .class-box {
     @apply w-full flex flex-col gap-[40px] px-6 py-8 bg-white rounded-xl border border-gray-200;
   }
   .time-box {
     @apply relative flex justify-center items-center w-[124px] h-[42px] p-3 bg-white rounded-lg border border-gray-300;
+  }
+  .bold-500 {
+    @apply font-bold text-primary-600;
   }
 
   /* ... */
