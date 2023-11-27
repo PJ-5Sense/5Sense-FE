@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       {/* 처음 화면에 보이는 크기로만 가져가는것이 아닌 안에 내용물이 채워지는 값을 가져가기 위해 크기값을 설정하지 않음 */}
-      <body className="flex min-w-[768px] min-h-[1024px] bg-primary-50">
+      <body className="bg-primary-50">
         <RecoilContextProvider>{children}</RecoilContextProvider>
       </body>
     </html>

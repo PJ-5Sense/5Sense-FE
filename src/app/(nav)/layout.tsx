@@ -16,7 +16,7 @@ export default function MainLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="wrapper flex-grow relative w-full h-full min-w-[768px] max-w-[2560px]">
+    <div className="wrapper relative min-w-[768px] max-w-[2560px]">
       {/* purplebox를 위한 relative */}
       <div className="fullbox w-full h-full px-6 2md:px-12 box-border lg:pl-0 lg:pr-4 xl:pr-8 2xl:pr-12">
         {/* 상위 relative가 없기때문에 body를 부모로 잡음 */}
@@ -44,7 +44,7 @@ export default function MainLayout({
           <div className="academyInfo hidden lg:academy-info">
             <AcademyInfo />
           </div>
-          <div className="service w-full h-full lg:translate-y-[-16px]">
+          <div className="service flex-grow 3xl:flex-grow-0 3xl:basis-[1576px] lg:translate-y-[-16px]">
             <Navbar />
             <div className="relative w-full 2xl:min-h-[1271px] xl:min-h-[854px] lg:min-h-[705px] md:min-h-[1098px] min-h-[752px] bg-white rounded-2xl">
               {children}
