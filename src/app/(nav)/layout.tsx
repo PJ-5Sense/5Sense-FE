@@ -18,7 +18,7 @@ export default function MainLayout({
   return (
     <div className="wrapper relative min-w-[768px] max-w-[2560px]">
       {/* purplebox를 위한 relative */}
-      <div className="fullbox w-full h-full px-6 2md:px-12 box-border lg:pl-0 lg:pr-4 xl:pr-8 2xl:pr-12">
+      <div className="w-full h-full px-6 2md:px-12 box-border lg:pl-0 lg:pr-4 xl:pr-8 2xl:pr-12">
         {/* 상위 relative가 없기때문에 body를 부모로 잡음 */}
 
         <div className="header w-full h-[124px] flex justify-between items-center lg:flex-none lg:h-[66px]">
@@ -41,7 +41,7 @@ export default function MainLayout({
           </div>
         </div>
         <div className="content w-full h-full lg:flex">
-          <div className="academyInfo hidden lg:academy-info">
+          <div className="academyInfo hidden lg:side-info">
             <AcademyInfo />
           </div>
           <div className="service flex-grow 3xl:flex-grow-0 3xl:basis-[1576px] lg:translate-y-[-16px]">

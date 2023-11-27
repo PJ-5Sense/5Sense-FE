@@ -6,8 +6,8 @@
   .box-flex {
     @apply flex flex-col justify-center items-center;
   }
-  .academy-info {
-    @apply mt-[130px] max-w-[504px] basis-[296px] 3xl:flex-grow h-[251px] flex flex-col items-center;
+  .side-info {
+    @apply mt-[130px] max-w-[504px] lg:px-4 xl:px-6 3xl:px-0 3xl:flex-grow h-[251px] flex flex-col items-center flex-shrink-0;
   }
   .menu-title {
     @apply text-black text-3xl font-bold font-['Pretendard'];
