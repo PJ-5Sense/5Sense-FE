@@ -1,13 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
 
 @layer components {
   .box-flex {
     @apply flex flex-col justify-center items-center;
   }
   .side-info {
-    @apply mt-[130px] max-w-[504px] lg:px-4 xl:px-6 3xl:px-0 3xl:flex-grow h-[251px] flex flex-col items-center flex-shrink-0;
+    @apply mt-[130px] w-[296px] max-w-[504px] h-full box-border lg:px-4 xl:px-6 3xl:px-0 3xl:flex-grow flex-shrink-0 flex flex-col items-center gap-16;
   }
   .menu-title {
     @apply text-black text-3xl font-bold font-['Pretendard'];
@@ -34,7 +35,10 @@
     @apply relative flex justify-center items-center w-[124px] h-[42px] p-3 bg-white rounded-lg border border-gray-300;
   }
   .bold-500 {
-    @apply font-bold text-primary-600;
+    @apply font-bold text-primary-500 font-sans;
+  }
+  .medium-500 {
+    @apply font-medium text-primary-500 font-sans;
   }
 
   /* ... */

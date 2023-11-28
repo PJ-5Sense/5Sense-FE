@@ -1,3 +1,4 @@
+'use client'
 import Navbar from '@/components/layout/Navbar'
 import Image from 'next/image'
 import mainLogo from '@/assets/logo/mainLogo.png'
@@ -9,6 +10,7 @@ import AcademyInfo from '@/components/layout/AcademyInfo'
 import { useState } from 'react'
 import LogoLink from '@/components/LogoLink'
 import SideModal from '@/components/SideModal'
+import TodaySchedule from '@/components/layout/TodaySchedule'
 
 export default function MainLayout({
   children
@@ -20,18 +22,34 @@ export default function MainLayout({
     { id: 2, name: '이용약관' },
     { id: 3, name: '팀소개' }
   ]
+
+  const [isModal, setIsModal] = useState<boolean>(false)
   return (
-    <div className="wrapper relative min-w-[768px] max-w-[2560px]">
+    <div
+      className={`wrapper ${
+        isModal ? 'fixed' : 'relative'
+      } min-w-[768px] max-w-[2560px]`}
+    >
       {/* purplebox를 위한 relative */}
+      {isModal ? (
+        <div className="absolute top-0 w-screen h-screen bg-black bg-opacity-20 backdrop-blur-[5px] shadow z-[100]">
+          <SideModal isModal={isModal} setIsModal={setIsModal} />
+        </div>
+      ) : (
+        ''
+      )}
       <div className="w-full h-full px-6 2md:px-12 box-border lg:pl-0 lg:pr-4 xl:pr-8 2xl:pr-12">
         {/* 상위 relative가 없기때문에 body를 부모로 잡음 */}
 
         <div className="header w-full h-[124px] flex justify-between items-center lg:flex-none lg:h-[66px]">
           <div className="rightBox flex gap-5 lg:flex-none lg:relative lg:top-12 lg:left-6">
-            <LogoLink
+            <Image
               className="menu lg:hidden cursor-pointer"
               src={menu}
               alt="메뉴"
+              onClick={() => {
+                setIsModal(!isModal)
+              }}
             />
             <div className="logoBox flex gap-[10px]">
               <Image src={mainLogo} alt="로고" />
@@ -47,7 +65,11 @@ export default function MainLayout({
         </div>
         <div className="content w-full h-full lg:flex">
           <div className="academyInfo hidden lg:side-info">
-            <AcademyInfo />
+            <AcademyInfo
+              color="text-white"
+              btnColor="bg-slate-50 bg-opacity-20"
+            />
+            <TodaySchedule />
           </div>
           <div className="service flex-grow 3xl:flex-grow-0 3xl:basis-[1576px] lg:translate-y-[-16px]">
             <Navbar />
