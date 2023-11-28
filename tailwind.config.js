@@ -39,6 +39,9 @@ module.exports = {
           200: '#E5E7EB',
           400: '#9CA3AF'
         }
+      },
+      boxShadow: {
+        mainPage: '-3px 0px 20px 0px rgba(139, 140, 165, 0.03)',
       }
     }
   }
