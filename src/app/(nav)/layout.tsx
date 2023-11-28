@@ -15,6 +15,11 @@ export default function MainLayout({
 }: {
   children: React.ReactNode
 }) {
+  const footer = [
+    { id: 1, name: '개인정보처리방침' },
+    { id: 2, name: '이용약관' },
+    { id: 3, name: '팀소개' }
+  ]
   return (
     <div className="wrapper relative min-w-[768px] max-w-[2560px]">
       {/* purplebox를 위한 relative */}
@@ -46,16 +51,28 @@ export default function MainLayout({
           </div>
           <div className="service flex-grow 3xl:flex-grow-0 3xl:basis-[1576px] lg:translate-y-[-16px]">
             <Navbar />
-            <div className="relative w-full 2xl:min-h-[1271px] xl:min-h-[854px] lg:min-h-[705px] md:min-h-[1098px] min-h-[752px] bg-white rounded-2xl">
+            <div className="relative w-full min-h-[864px] lg:min-h-[854px] bg-white rounded-2xl">
               {children}
             </div>
-            <div className="footer relative bottom-0 h-25 box-border">
-              <span className="text-gray-300 text-xl font-bold font-['Poppins'] mr-[56px]">
-                5sense
-              </span>
-              <span className="text-gray-300 text-sm font-medium font-['Pretendard'] leading-[14px]">
-                Copyright ⓒ2023 5sense inc, ltd. All rights reserved
-              </span>
+            <div className="footer flex w-full h-[52px] mt-12 justify-between">
+              <div className="right flex items-center gap-[56px]">
+                <span className="text-gray-300 text-xl font-bold font-['Poppins']">
+                  5sense
+                </span>
+                <span className="text-gray-300 text-sm font-medium font-['Pretendard'] leading-[14px]">
+                  Copyright ⓒ2023 5sense inc, ltd. All rights reserved
+                </span>
+              </div>
+              <div className="left flex items-center">
+                {footer.map((item, idx) => (
+                  <span
+                    key={item.id}
+                    className="text-gray-300 text-xs font-medium font-['Pretendard'] leading-[14px] after:inline-block after:w-px after:h-2.5 after:bg-gray-300 after:mx-4 last:after:content-none"
+                  >
+                    {item.name}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
