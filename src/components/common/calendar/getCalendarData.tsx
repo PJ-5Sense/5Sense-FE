@@ -1,12 +1,11 @@
 import { dateDataType } from '@/components/common/calendar/datePicker/dayDatePIcker'
 import useGetHolidayData from '../../../hooks/useGetHolidayData'
 
-export function getCalendarData(dateData: dateDataType, type?: string) {
+export function GetCalendarData(dateData: dateDataType, type?: string) {
   const getHoliData = useGetHolidayData(dateData.year)
   const lastDateOfLastMonthData = new Date(dateData.year, dateData.month, 0)
   const firstDateOfCurrentMonthData = new Date(dateData.year, dateData.month)
   const lastDateOfCurrnetMonthData = new Date(dateData.year, dateData.month + 1, 0)
-  const firstDateOfNextMonthData = new Date(dateData.year, dateData.month + 1)
 
   const currnetDate = new Date()
 
@@ -15,8 +14,6 @@ export function getCalendarData(dateData: dateDataType, type?: string) {
     month: currnetDate.getMonth(),
     date: currnetDate.getDate()
   }
-
-  console.log(dateData, currentdateData)
 
   let list = []
   /* 이전 월 정보 */
@@ -46,7 +43,6 @@ export function getCalendarData(dateData: dateDataType, type?: string) {
       }
       startDate = Number(list[list.length - 1].date) + 1
     }
-    console.log(startDate)
     if (getHoliData[dateData.month + 1]) {
       const monthHoliData = getHoliData[dateData.month + 1].date
       for (var i = startDate; i <= lastDateOfCurrnetMonthData.getDate(); i++) {
@@ -101,47 +97,6 @@ export function getCalendarData(dateData: dateDataType, type?: string) {
       }
     }
   }
-
-  /* 해당 월에 공휴일이 유무 확인 */
-  /* if (dateData.year !== currentdateData.year && dateData.month !== currentdateData.month) {
-    if (getHoliData[dateData.month + 1]) {
-      const monthHoliData = getHoliData[dateData.month + 1].date
-      for (var i = 1; i <= lastDateOfCurrnetMonthData.getDate(); i++) {
-        if (monthHoliData.includes(i)) {
-          list.push({
-            date: i,
-            textColor: 'font-bold text-red-600',
-            clickable: true
-          })
-        } else {
-          list.push({
-            date: i,
-            textColor: 'gray-900-bold',
-            clickable: true
-          })
-        }
-      }
-    } else {
-      for (var i = 1; i <= lastDateOfCurrnetMonthData.getDate(); i++) {
-        list.push({
-          date: i,
-          textColor: 'gray-900-bold',
-          clickable: true
-        })
-      }
-    }
-  } */
-
-  /* 월의 마지막 주 */
-  /* if (lastDateOfCurrnetMonthData.getDay() !== 6) {
-    for (var i = 1; i <= 7 - firstDateOfNextMonthData.getDay(); i++) {
-      list.push({
-        date: undefined,
-        textColor: '',
-        clickable: false
-      })
-    }
-  } */
 
   let result = []
   for (var i = 0; i < list.length; i += 7) {

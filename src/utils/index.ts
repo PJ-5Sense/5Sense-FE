@@ -47,8 +47,8 @@ export function calculateEndTime(startTime: string, lessonTime: number) {
 }
 
 export function formatLessonDate(date: string) {
-  const formatDate = date.slice(0, 10).split('-')
-  return formatDate[0] + '.' + formatDate[1] + '.' + formatDate[2]
+  const revertToKoreaTime = new Date(date)
+  return `${revertToKoreaTime.getFullYear()}.${revertToKoreaTime.getMonth() + 1}.${revertToKoreaTime.getDate()}`
 }
 
 export function getKoreanNumber(value: string) {
@@ -163,4 +163,23 @@ export const getTimeListByHour = (openTime: string, closeTime: string) => {
   }
 
   return timeList
+}
+
+export const calculateLessonTime = (startTime: string, endTime: string) => {
+  const start = {
+    hour: Number(startTime.split(':')[0]),
+    min: Number(startTime.split(':')[1])
+  }
+
+  const end = {
+    hour: Number(endTime.split(':')[0]),
+    min: Number(endTime.split(':')[1])
+  }
+
+  const divideTimeByHalf = {
+    hour: (end.hour - start.hour) * 60,
+    min: end.min - start.min
+  }
+
+  return divideTimeByHalf.hour + divideTimeByHalf.min
 }

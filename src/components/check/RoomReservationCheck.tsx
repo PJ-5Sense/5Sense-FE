@@ -10,7 +10,6 @@ interface IProps {
 }
 
 export default function RoomReservationCheck(props: IProps) {
-  console.log(props)
   const calculateEndTime = () => {
     const startTime = {
       hour: Number(props.startTime?.split(':')[0]),

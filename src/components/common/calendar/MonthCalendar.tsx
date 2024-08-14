@@ -4,7 +4,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 
 import { useWindowSize } from '@/hooks/useWindowSize'
 import DateSlideTab from '@/components/main/DateSlideTab'
-import MonthDatePicker from './datePicker/MonthDatePicker'
+import MonthDatePicker from './datePicker/monthDatePicker'
 import { dateDataType } from '@/components/common/calendar/datePicker/dayDatePIcker'
 import { MonthCalendarDateState } from '@/lib/state/calendar/MonthCalendarDateState'
 
@@ -13,7 +13,7 @@ import ChevronRight from '@/icons/icon/datePicker/chevronRight.svg'
 import CalendarIcon from '@/icons/icon/datePicker/calendar.svg'
 
 export default function MonthCalendar() {
-  const {width, height} = useWindowSize()
+  const { width, height } = useWindowSize()
   const dateData = useRecoilValue(MonthCalendarDateState)
   const setDateData = useSetRecoilState(MonthCalendarDateState)
 
@@ -76,9 +76,11 @@ export default function MonthCalendar() {
     <>
       <div className="w-full flex justify-center xl:mx-auto xl:max-w-[1016px] lg:max-w-[936px]">
         <div className="relative flex gap-[138px] items-center w-full  h-[52px]  md:w-full ">
-          <div className={`flex mx-auto ${
+          <div
+            className={`flex mx-auto ${
               width > 950 ? 'w-[420px]' : 'w-[312px]'
-            } h-full p-1.5 border rounded-md border-gray-100 bg-[#F8FAFD]`}>
+            } h-full p-1.5 border rounded-md border-gray-100 bg-[#F8FAFD]`}
+          >
             <div
               className="h-full w-10 border p-1 rounded border-gray-200 bg-white flex items-center cursor-pointer"
               onClick={moveBackMonth}

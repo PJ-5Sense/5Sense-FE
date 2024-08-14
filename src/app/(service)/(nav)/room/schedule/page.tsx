@@ -1,6 +1,5 @@
 'use client'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 import DropDown from '@/components/common/DropDown'
@@ -28,7 +27,7 @@ export default function Schedule() {
   }
 
   useEffect(() => {
-    instance('/lessons/filters?type=session&take=100&page=1').then(res => {
+    instance('/api/lessons/filters?type=session&take=100&page=1').then(res => {
       const classData = res.data.data.lessons
       setDropDownProps(prev => ({
         ...prev,

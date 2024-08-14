@@ -1,5 +1,5 @@
 'use client'
-import { IClassType, ITypeValid } from '@/app/(service)/(nav)/class/register/page'
+//import { IClassType, ITypeValid } from '@/app/(service)/(nav)/class/edit/session/page'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import Duration from './component/Duration'
 import Session from './component/Session'
@@ -11,9 +11,9 @@ export type scheduleItem = {
 }
 
 export interface ITypeProps {
-  classType: IClassType
-  valid?: ITypeValid
-  setClassType: Dispatch<SetStateAction<IClassType>>
+  classType: any
+  valid?: any
+  setClassType: Dispatch<SetStateAction<any>>
 }
 
 export default function ClassType({ classType, setClassType, valid }: ITypeProps) {
@@ -21,7 +21,7 @@ export default function ClassType({ classType, setClassType, valid }: ITypeProps
 
   const onTabHandler = (date: string) => {
     if (date === '기간반') {
-      setClassType(prev => ({
+      setClassType((prev: any) => ({
         ...prev,
         type: 'duration',
         lessonTime: 30,
@@ -31,7 +31,7 @@ export default function ClassType({ classType, setClassType, valid }: ITypeProps
       }))
       return setTab(true)
     } else {
-      setClassType(prev => ({
+      setClassType((prev: any) => ({
         ...prev,
         type: 'session',
         lessonTime: 30,

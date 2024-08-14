@@ -1,9 +1,7 @@
 'use client'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 
-import { dateDataType } from '@/components/common/calendar/datePicker/dayDatePIcker'
 import MonthSchedule from '@/components/main/MonthSchedule'
 import MonthCalendar from '@/components/common/calendar/MonthCalendar'
 import { MonthCalendarDateState } from '@/lib/state/calendar/MonthCalendarDateState'
@@ -57,12 +55,12 @@ export default function MonthDateTab() {
             <div className="w-full flex flex-col gap-6 max-h-[700px] overflow-auto">
               {classDetails.classData.map((data: any, i: number) => {
                 return (
-                  <div className="w-fill flex flex-col gap-2">
+                  <div key={i} className="w-fill flex flex-col gap-2">
                     <span className="gray-800-semibold text-base">{formatStartTime(data.startTime)}</span>
                     <div className="w-full flex flex-col gap-7 border border-1 border-gray-200 rounded-lg p-4">
                       {data.data.map((classData: any, i: number) => {
                         return (
-                          <div className="w-full flex gap-4">
+                          <div key={i} className="w-full flex gap-4">
                             <span
                               className={`w-[3px] ${classData.type === 'duration' ? 'bg-primary-600' : 'bg-secondary-600'}`}
                             />

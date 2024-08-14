@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 
 import { useWindowSize } from '@/hooks/useWindowSize'
@@ -8,23 +8,15 @@ import WeekDatePicker from '@/components/common/calendar/datePicker/weekDatePick
 import GetWeekList from './getWeekList'
 import { WeekCalendarDateState } from '@/lib/state/calendar/WeekCalendarDateState'
 import { modalState } from '@/lib/state/modal'
-import Modal from '@/components/common/modal'
-import DetailClassModal from '@/components/modal/DetailClassModal'
 
 import ChevronLeft from '@/icons/icon/datePicker/chevronLeft.svg'
 import ChevronRight from '@/icons/icon/datePicker/chevronRight.svg'
 import CalendarIcon from '@/icons/icon/datePicker/calendar.svg'
 
 export default function WeekCalendar() {
-  const modal = useRecoilValue(modalState)
-  const setModal = useSetRecoilState(modalState)
   const weekData = useRecoilValue(WeekCalendarDateState)
   const setWeekData = useSetRecoilState(WeekCalendarDateState)
   const dateTabData = GetWeekList(weekData.year, weekData.month)
-  const [props, setProps] = useState<{ id: number; type: string }>({
-    id: 0,
-    type: ''
-  })
 
   const weekLength = {
     currentMonth: GetWeekList(weekData.year, weekData.month).length,

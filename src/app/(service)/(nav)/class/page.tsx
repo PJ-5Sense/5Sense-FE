@@ -6,11 +6,9 @@ import { useRecoilValue, useSetRecoilState } from 'recoil'
 import ClassFilter from '@/components/class/classFilter'
 import instance from '@/lib/api/axios'
 import { filterState, filterStateType } from '@/lib/filter/filterState'
-import { modalState } from '@/lib/state/modal'
-import { changePhoneNumberToString, formatLessonDate, formatStartTime } from '@/utils'
 import DetailClassModal from '@/components/modal/DetailClassModal'
-
 import ContentHeader from '@/components/common/ContentHeader'
+import NotFoundPage from '@/components/common/NotFoundPage'
 
 interface classType {
   category: string
@@ -41,10 +39,8 @@ export default function ClassPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
-  const handleClose = () => setIsModalOpen(false)
-
   const checkLessonUrl = (data: filterStateType, page: number) => {
-    let baseUrl = ['lessons/filters?']
+    let baseUrl = ['/api/lessons/filters?']
     if (data.classType !== '') {
       baseUrl.push(`type=${data.classType}`)
     } else {
@@ -153,7 +149,7 @@ export default function ClassPage() {
             </button>
           ))}
       </div>
-      {/* {!isLoading && <div ref={target}></div>}
+      {!isLoading && <div ref={target}></div>}
       {isLoading && (
         <div className="w-full h-[70px] pt-[50px] flex justify-center items-center">
           <div
@@ -166,7 +162,11 @@ export default function ClassPage() {
           </div>
         </div>
       )}
-      {isRefresh && classList.length === 0 && <NoneResult />} */}
+      {isRefresh && classList.length === 0 ? (
+        <div className="w-full mt-[140px]">
+          <NotFoundPage title="검색결과가 없습니다." subTitle="다른 검색어를 통해 검색을 이어나가보세요" />
+        </div>
+      ) : null}
       {isModalOpen && (
         <DetailClassModal
           id={targetClass.id}

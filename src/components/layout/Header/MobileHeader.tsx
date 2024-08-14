@@ -1,5 +1,4 @@
 'use client'
-
 import { Drawer } from 'flowbite-react/components/Drawer'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -53,7 +52,7 @@ export default function MobileHeader({ centerInfo, isExistCenter }: IProps) {
         <Drawer.Header />
         <Drawer.Items>
           <div className="w-full flex flex-col gap-10 ">
-            <AcademyInfo centerInfo={centerInfo} isExistCenter={isExistCenter} drawer />
+            <AcademyInfo centerInfo={centerInfo} isExistCenter={isExistCenter} drawer onClose={handleDrawer} />
             <div className="w-[480px] h-px bg-gray-200" />
             <TodaySchedule />
           </div>

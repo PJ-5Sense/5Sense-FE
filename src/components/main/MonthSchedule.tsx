@@ -19,7 +19,7 @@ export default function MonthSchedule({ dateData }: IProps) {
 
   const [classData, setClassData] = useState<any[]>([])
   useEffect(() => {
-    instance(`/lessons/${dateData.year}/${dateData.month + 1}`).then(res => {
+    instance(`/api/lessons/${dateData.year}/${dateData.month + 1}`).then(res => {
       const startDay = new Date(dateData.year, dateData.month, 0).getDay()
       const data = res.data.data
       let returnData = []
@@ -37,8 +37,6 @@ export default function MonthSchedule({ dateData }: IProps) {
       setClassData([])
     }
   }, [dateData.month])
-
-  console.log('classData', classData)
 
   return (
     <div className="w-full flex flex-col gap-4 mx-auto xl:max-w-[1016px] pt-8">
@@ -80,7 +78,7 @@ export default function MonthSchedule({ dateData }: IProps) {
                   day = i - startDay
                 }
               } else {
-              /* 첫 주의 시작이 월요일인 경우 */
+                /* 첫 주의 시작이 월요일인 경우 */
                 day = i + 1
               }
               let durations = 0

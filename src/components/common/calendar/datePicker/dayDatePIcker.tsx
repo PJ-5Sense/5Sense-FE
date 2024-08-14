@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 
-import { getCalendarData } from '@/components/common/calendar/getCalendarData'
+import { GetCalendarData } from '../getCalendarData'
 import { DayCalendarDateState } from '@/lib/state/calendar/DayCalendarDateState'
 
 import AllowRight from '@/icons/icon/datePicker/allowRight.svg'
@@ -29,7 +29,7 @@ export default function DayDatePicker(props: IProps) {
   const [clickedDate, setClickedDate] = useState<string>(`${dateData.date}`)
 
   let dateList
-  dateList = getCalendarData(dateData, props.type)
+  dateList = GetCalendarData(dateData, props.type)
 
   const onClickDateHandler = (e: React.MouseEvent<HTMLDivElement>) => {
     setClickedDate(e.currentTarget.id)

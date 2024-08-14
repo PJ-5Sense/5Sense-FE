@@ -81,7 +81,9 @@ export default function Session({ register, watch, setValue, formState, edit }: 
                 type="number"
                 className="flex-grow text-right placeholder:text-gray-400 text-base font-normal border-none outline-none disabled:bg-inherit disabled:text-[#9CA3AF] focus:shadow-none focus:border-current focus:ring-0 focus:ring-transparent"
                 placeholder="0"
+                disabled={edit}
                 {...register('tuitionFee', { required: true })}
+                onWheel={e => e.currentTarget.blur()}
               />
               <span className="text-gray-400 text-base font-normal">원</span>
             </div>
@@ -92,6 +94,7 @@ export default function Session({ register, watch, setValue, formState, edit }: 
                 type="number"
                 className="flex-grow text-right placeholder:text-gray-400 text-base font-normal border-none outline-none disabled:bg-inherit disabled:text-[#9CA3AF] focus:shadow-none focus:border-current focus:ring-0 focus:ring-transparent"
                 placeholder="0"
+                disabled={edit}
                 {...register('totalSessions', { required: true })}
               />
               <span className="text-gray-400 text-base font-normal">회</span>
@@ -101,9 +104,7 @@ export default function Session({ register, watch, setValue, formState, edit }: 
             <div className="flex w-full">
               <span className="gray-900-semibold text-base">총 금액</span>
               <span
-                className={`flex-grow text-right text-[22px] font-bold ${
-                  disabled ? 'text-[#9CA3AF]' : 'text-indigo-500'
-                }`}
+                className={`flex-grow text-right text-[22px] font-bold ${edit ? 'text-[#9CA3AF]' : 'text-indigo-500'}`}
               >
                 {formatAddComma(watch('tuitionFee'), watch('totalSessions'))}원
               </span>
@@ -128,10 +129,12 @@ export default function Session({ register, watch, setValue, formState, edit }: 
       {/* 소요 시간*/}
       <div className="time w-full flex flex-col gap-2 mt-10">
         <div className="gray-800-semibold text-base">소요 시간</div>
-        <div className="w-full flex justify-between h-16 p-3 border border-1 border-gray-300 rounded-full">
+        <div
+          className={`w-full flex justify-between h-16 p-3 border border-1 border-gray-300 rounded-full ${edit && 'bg-gray-50'}`}
+        >
           <button
-            disabled={watch('lessonTime') === 30}
-            className={`w-10 h-full flex justify-center items-center rounded-full bg-primary-600 cursor-pointer disabled:bg-gray-200`}
+            disabled={watch('lessonTime') === 30 || edit}
+            className={`w-10 h-full flex justify-center items-center rounded-full ${edit ? 'bg-gray-200' : 'bg-primary-600'} cursor-pointer`}
             onClick={e => {
               e.preventDefault()
               handleLessonTime('minus')
@@ -147,8 +150,8 @@ export default function Session({ register, watch, setValue, formState, edit }: 
             {watch('lessonTime')}분
           </div>
           <button
-            disabled={disabled}
-            className="w-10 h-full flex justify-center items-center rounded-full bg-primary-600 cursor-pointer disabled:bg-gray-200"
+            disabled={edit}
+            className={`w-10 h-full flex justify-center items-center rounded-full ${edit ? 'bg-gray-200' : 'bg-primary-600'} cursor-pointer`}
             onClick={e => {
               e.preventDefault()
               handleLessonTime('plus')
@@ -161,10 +164,12 @@ export default function Session({ register, watch, setValue, formState, edit }: 
       {/* 최대 수업 정원*/}
       <div className="w-full flex flex-col gap-2 mt-8">
         <div className="text-base gray-800-semibold">최대 수업 정원</div>
-        <div className="w-full flex justify-between h-16 p-3 border border-1 border-gray-300 rounded-full">
+        <div
+          className={`w-full flex justify-between h-16 p-3 border border-1 border-gray-300 rounded-full ${edit && 'bg-gray-50'}`}
+        >
           <button
-            disabled={watch('capacity') === 1}
-            className="w-10 h-full flex items-center justify-center rounded-full bg-primary-600 cursor-pointer disabled:bg-gray-200"
+            disabled={watch('capacity') === 1 || edit}
+            className={`w-10 h-full flex justify-center items-center rounded-full ${edit ? 'bg-gray-200' : 'bg-primary-600'} cursor-pointer`}
             onClick={e => {
               e.preventDefault()
               handleStudentCnt('minus')
@@ -180,8 +185,8 @@ export default function Session({ register, watch, setValue, formState, edit }: 
             {watch('capacity')}명
           </div>
           <button
-            disabled={disabled}
-            className="w-10 h-full flex items-center justify-center rounded-full bg-primary-600 cursor-pointer disabled:bg-gray-200"
+            disabled={edit}
+            className={`w-10 h-full flex justify-center items-center rounded-full ${edit ? 'bg-gray-200' : 'bg-primary-600'} cursor-pointer`}
             onClick={e => {
               e.preventDefault()
               handleStudentCnt('plus')

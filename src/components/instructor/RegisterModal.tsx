@@ -64,8 +64,7 @@ export default function RegisterModal({ onClose, onCloseState, onRigister }: IPr
           alert('강사정보를 올바르게 입력해주세요.')
           return
         }
-        instance.post('/teachers', data).then((res: AxiosResponse) => {
-          console.log(res)
+        instance.post('/api/teachers', data).then((res: AxiosResponse) => {
           onClose()
           if (onCloseState) {
             onCloseState()

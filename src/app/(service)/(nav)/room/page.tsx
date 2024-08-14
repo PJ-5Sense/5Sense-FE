@@ -17,31 +17,41 @@ export default function RoomPage() {
   const calendarDate = useRecoilValue(DayCalendarDateState)
   const setCalendarDate = useSetRecoilState(DayCalendarDateState)
   const router = useRouter()
-  const modal = useRecoilValue(modalState) // 상태의 값을 가져옴
   const [indexOfRoomList, setIndexOfRoomList] = useState<number>(0)
   const [room, setRoom] = useState<any>([])
+  const [isDeleted, setIsDeleted] = useState<boolean>(false)
 
   const onChangeRoomList = (num: number) => {
     setIndexOfRoomList(num)
   }
 
-  useEffect(() => {
-    if (!modal) {
-      instance('lesson-rooms/daily', {
-        params: {
-          date: new Date(calendarDate.year, calendarDate.month, calendarDate.date).toISOString()
-        }
-      }).then(res => {
-        const list = res.data.data
-        const formatData = RoomDataFormatter(list)
-        setRoom(formatData)
+  const getRoomData = () => {
+    instance('/api/lesson-rooms/daily', {
+      params: {
+        date: new Date(calendarDate.year, calendarDate.month, calendarDate.date).toISOString()
+      }
+    }).then(res => {
+      const list = res.data.data
+      const formatData = RoomDataFormatter(list)
+      setRoom(formatData)
+    })
+  }
+
+  const onDeleteRoom = (roomId: number) => {
+    if (confirm('해당 룸을 삭제하시겠습니까?')) {
+      instance.delete(`/api/lesson-rooms/${roomId}`).then(res => {
+        getRoomData()
       })
+    } else {
+      return
     }
-  }, [calendarDate, modal])
+  }
 
   useEffect(() => {
+    getRoomData()
+
     return () => {
-      if(!window.location.href.includes('room')){
+      if (!window.location.href.includes('room')) {
         setCalendarDate({
           year: currentDate.getFullYear(),
           month: currentDate.getMonth(),
@@ -49,7 +59,19 @@ export default function RoomPage() {
         })
       }
     }
-  }, [])
+  }, [calendarDate])
+
+  /* useEffect(() => {
+    return () => {
+      if (!window.location.href.includes('room')) {
+        setCalendarDate({
+          year: currentDate.getFullYear(),
+          month: currentDate.getMonth(),
+          date: currentDate.getDate()
+        })
+      }
+    }
+  }, []) */
 
   return (
     <div>
@@ -57,7 +79,12 @@ export default function RoomPage() {
       {/* 캘린더 */}
       <DayCalendar page="room" />
       {/* 룸 리스트 */}
-      <RoomList roomData={room} onChangeRoomList={onChangeRoomList} indexOfRoomList={indexOfRoomList} />
+      <RoomList
+        roomData={room}
+        onChangeRoomList={onChangeRoomList}
+        indexOfRoomList={indexOfRoomList}
+        onDeleteRoom={onDeleteRoom}
+      />
       {/* 룸 시간표 */}
       <RoomSchedule roomScheduleData={room} indexOfRoomList={indexOfRoomList} />
     </div>

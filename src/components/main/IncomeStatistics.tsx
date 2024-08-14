@@ -1,11 +1,9 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
-import { IncomeStatisticsType } from './MainBox'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 export default function IncomeStatistics({ props }: any) {
-  //console.log(props)
   const data = {
     datasets: [
       {

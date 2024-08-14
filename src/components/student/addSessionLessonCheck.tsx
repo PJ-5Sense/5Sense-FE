@@ -1,3 +1,5 @@
+import { formatDate } from '@/utils'
+
 import TrashIcon from '@/icons/icon/trash.svg'
 
 interface IProps {
@@ -38,7 +40,7 @@ export function AddSessionLessonCheck(props: IProps) {
           </div>
           <div className="w-full flex items-center gap-2">
             <div className="w-[80px] gray-500-medium text-sm">• 일자</div>
-            <div className="w-full gray-500-medium text-sm">{props.sessionDate}</div>
+            <div className="w-full gray-500-medium text-sm">{formatDate(props.sessionDate)}</div>
           </div>
           <div className="w-full flex items-center gap-2">
             <div className="w-[80px] gray-500-medium text-sm">• 시간</div>

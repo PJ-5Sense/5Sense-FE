@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 
 import DateSlideTab from '@/components/main/DateSlideTab'
-import { dateDataType } from '@/components/common/calendar/datePicker/dayDatePIcker'
 import DayDatePicker from '@/components/common/calendar/datePicker/dayDatePIcker'
 import { DayCalendarDateState } from '@/lib/state/calendar/DayCalendarDateState'
 import { useWindowSize } from '@/hooks/useWindowSize'
@@ -13,7 +12,7 @@ import ChevronRight from '@/icons/icon/datePicker/chevronRight.svg'
 import CalendarIcon from '@/icons/icon/datePicker/calendar.svg'
 
 export default function Calendar({ page }: { page: string }) {
-  const {width, height} = useWindowSize()
+  const { width, height } = useWindowSize()
   const calendarDate = useRecoilValue(DayCalendarDateState)
   const setCalendarDate = useSetRecoilState(DayCalendarDateState)
 
@@ -56,7 +55,6 @@ export default function Calendar({ page }: { page: string }) {
   const moveBackDay = () => {
     setIsClickedDatePicker(false)
     let lastDateOfLastMonth = lastDateOfLastMonthData.getDate()
-    console.log(lastDateOfLastMonth)
     if (calendarDate.date === 1) {
       if (calendarDate.month === 0) {
         setCalendarDate(calendarDate => ({
@@ -87,9 +85,11 @@ export default function Calendar({ page }: { page: string }) {
   return (
     <div className="w-full flex xl:mx-auto xl:max-w-[1016px] lg:max-w-[936px]">
       <div className="relative mx-auto flex gap-[138px] w-full  h-[52px]  md:w-full ">
-        <div className={`flex mx-auto ${
-              width > 950 ? 'w-[420px]' : 'w-[312px]'
-            } h-full p-1.5 border rounded-md border-gray-100 bg-[#F8FAFD]`}>
+        <div
+          className={`flex mx-auto ${
+            width > 950 ? 'w-[420px]' : 'w-[312px]'
+          } h-full p-1.5 border rounded-md border-gray-100 bg-[#F8FAFD]`}
+        >
           <div
             className="h-10 w-10 border p-2 rounded border-gray-200 bg-white flex items-center cursor-pointer"
             onClick={moveBackDay}
@@ -102,8 +102,10 @@ export default function Calendar({ page }: { page: string }) {
             } hover:text-primary-600 cursor-pointer`}
             onClick={onClickDatePickerHandler}
           >
-            <CalendarIcon className='text-gray-500' />
-            <span className='h-6 flex items-center font-semibold text-[16px]'>{calendarDate.year}년 {calendarDate.month + 1}월 {calendarDate.date}일</span>
+            <CalendarIcon className="text-gray-500" />
+            <span className="h-6 flex items-center font-semibold text-[16px]">
+              {calendarDate.year}년 {calendarDate.month + 1}월 {calendarDate.date}일
+            </span>
           </div>
           <div
             className="h-10 w-10 border p-2 rounded border-gray-200 bg-white flex items-center cursor-pointer"

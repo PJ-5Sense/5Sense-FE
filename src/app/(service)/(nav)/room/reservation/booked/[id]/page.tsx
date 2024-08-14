@@ -9,19 +9,18 @@ import { AddSessionState } from '@/lib/state/addSessionState'
 import instance from '@/lib/api/axios'
 import { useEffect } from 'react'
 
-export default function BookedRoomReservation() {
+export default function BookedRoomReservation({ params }: { params: { id: string } }) {
+  const roomId = params.id
   const router = useRouter()
 
   const reservationData = useRecoilValue(AddSessionState)
 
   useEffect(() => {
     return () => {
-      localStorage.removeItem('classId')
+      localStorage.removeItem('className')
       localStorage.removeItem('reservationDate')
       localStorage.removeItem('reservationTime')
       localStorage.removeItem('classId')
-      localStorage.removeItem('roomId')
-      localStorage.removeItem('roomName')
     }
   }, [])
 
@@ -33,21 +32,19 @@ export default function BookedRoomReservation() {
         onSubmit={e => {
           e.preventDefault()
           instance
-            .post('/session-lesson-schedules', { ...reservationData })
+            .post('/api/session-lesson-schedules', { ...reservationData })
             .then(res => {
               alert('예약이 완료되었습니다')
               router.push('/room')
             })
             .catch(err => {
-              console.log(err)
               if (err.response.status === 409) {
                 alert(err.response.data.message)
               }
             })
-          console.log(reservationData)
         }}
       >
-        <SessionReservationCard />
+        <SessionReservationCard roomId={roomId} />
         <SearchPerson type="students" />
         <button
           type="submit"

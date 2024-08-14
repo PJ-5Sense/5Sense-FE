@@ -1,9 +1,6 @@
 'use client'
 import { useState } from 'react'
 
-import ToggleOnIcon from 'public/assets/icons/toggle_on.svg'
-import ToggleOffIcon from 'public/assets/icons/toggle_off.svg'
-
 interface IProps {
   type: string
   id: string
@@ -41,6 +38,7 @@ export default function List(props: IProps) {
               return (
                 <>
                   <div
+                    key={i}
                     className={`${
                       data.type === 'duration' ? 'text-primary-600' : 'text-secondary-600'
                     } text-base font-bold`}

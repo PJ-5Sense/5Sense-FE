@@ -1,18 +1,10 @@
 'use client'
-import Image from 'next/image'
-
 import { useState, useRef, useEffect } from 'react'
 import { useOnClickOutside } from '@/hooks/useOnclickOutside'
-import { classifyListType } from '../class/classFilter'
 import { classType } from '../modal/StudentAddClassModal'
 
 import ChevronDownIcon from 'public/assets/icons/chevron/chevron_down_gray.svg'
 import ChevronUpIcon from 'public/assets/icons/chevron/chevron_up_gray.svg'
-import CheckedIcon from '@/icons/icon/checked.svg'
-
-interface HandleChangeTimeFromChildType {
-  (data: { open?: string; close?: string }): void
-}
 
 interface categoryProps {
   id: number
@@ -68,7 +60,6 @@ export default function DropDown(props: IProps) {
   }
   const [isClickDropDown, setIsClickDropDown] = useState(false)
   const [clickedItemTitle, setClickedItemTitle] = useState<string>(props.title)
-  const [repeatClickedItemTitle, setRepeatClickedItemTitle] = useState<string[]>([])
   const [clickedItem, setClickedItem] = useState<any>(props.title)
   const [checked, setChecked] = useState<string[]>([])
 

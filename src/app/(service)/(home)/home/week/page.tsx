@@ -31,7 +31,7 @@ export default function MainPageWeek() {
 
   useEffect(() => {
     if (detailClassState.id !== 0) {
-      instance.get(`/${detailClassState.type}-lessons/${detailClassState.id}/details`).then(res => {
+      instance(`/api/${detailClassState.type}-lessons/${detailClassState.id}/details`).then(res => {
         console.log(res)
         const classData = res.data.data
         setClassDetail(prev => ({

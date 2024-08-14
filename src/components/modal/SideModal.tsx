@@ -2,7 +2,6 @@
 import Image from 'next/image'
 import { useRecoilState, useRecoilValue } from 'recoil'
 
-import DetailStudent from './DetailStudent'
 import { modalState } from '@/lib/state/modal'
 import close_Circle_bg from 'public/assets/icons/close_circle_bg_pri_600.svg'
 

@@ -19,7 +19,7 @@ export default function AddClassModal({ onClick }: IProps) {
         /> */}
       </div>
       <div className="w-full px-6 pb-6 flex flex-col gap-10">
-        <RoomReservation classType="duration" viewType="modal" onClick={onClick} />
+        <RoomReservation classType="duration" viewType="modal" onClose={onClick} />
       </div>
     </div>
   )

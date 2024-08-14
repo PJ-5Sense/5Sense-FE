@@ -1,7 +1,5 @@
 import { formatLessonDate, formatStartTime } from '@/utils'
 
-import TrashIcon from '@/icons/icon/trash.svg'
-
 interface IProps {
   className: string
   type: string
@@ -22,15 +20,6 @@ export default function StudentsSession(sessionLessonsData: IProps) {
   return (
     <div className="w-full flex flex-col gap-4">
       <div className="relative w-full px-4 py-3.5 flex flex-col rounded-lg border border-1 border-gray-200 bg-gray-50 ">
-        {/* {sessionLessonsData.type === 'check' && (
-          <button type="button" className="absolute top-[15px] right-4 flex items-center gap-1.5 ">
-            <TrashIcon className="text-gray-400" width={16} height={16} />
-            <div className="gray-500-normal text-[13px]" onClick={sessionLessonsData.onDelete}>
-              삭제하기
-            </div>
-          </button>
-        )} */}
-
         <div className="w-full flex flex-col gap-1.5">
           <div className="w-full flex items-center flex-col gap-px">
             <div className="w-full text-secondary-600 text-xs font-bold">회차반</div>

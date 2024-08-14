@@ -55,7 +55,7 @@ export default function Duration({ classType, setClassType, valid }: ITypeProps)
     const value: string = e.target.value
     const removedCommaValue = value.replaceAll(',', '')
     if (isNaN(Number(removedCommaValue))) {
-      return setClassType(prev => ({ ...prev, tuitionFee: '' }))
+      return setClassType((prev: any) => ({ ...prev, tuitionFee: '' }))
     }
 
     if (removedCommaValue.length > 9) {
@@ -63,7 +63,7 @@ export default function Duration({ classType, setClassType, valid }: ITypeProps)
       setNoticeModal(true)
     }
 
-    setClassType(prev => ({ ...prev, tuitionFee: Number(removedCommaValue.slice(0, 9)).toLocaleString() }))
+    setClassType((prev: any) => ({ ...prev, tuitionFee: Number(removedCommaValue.slice(0, 9)).toLocaleString() }))
   }
 
   console.log(duarationSchedule)

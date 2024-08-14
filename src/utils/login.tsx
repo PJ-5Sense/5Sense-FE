@@ -21,7 +21,7 @@ export default function Login({ social, code, state }: IProps) {
   }
   const login = () => {
     instance
-      .post(`/auth/${social}/login`, {
+      .post(`/api/auth/${social}/login`, {
         code: code,
         state: state
       })

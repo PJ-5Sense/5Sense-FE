@@ -41,7 +41,7 @@ export default function DaySchedule({ dateData }: IProps) {
   }
 
   useEffect(() => {
-    instance(`/lessons/${dateData.year}/${dateData.month + 1}`).then(res => {
+    instance(`/api/lessons/${dateData.year}/${dateData.month + 1}`).then(res => {
       const data = res.data.data
 
       setLessonData(FormatDayData(data))
@@ -51,8 +51,6 @@ export default function DaySchedule({ dateData }: IProps) {
       setLessonData([])
     }
   }, [dateData.month])
-
-  console.log(lessonData)
 
   return (
     <>

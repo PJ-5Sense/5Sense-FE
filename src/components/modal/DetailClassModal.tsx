@@ -53,7 +53,7 @@ export default function DetailClassModal({ id, type, isOpen, handleClose }: IPro
   })
 
   const endOfClass = () => {
-    instance.patch(`/${type}-lessons/${id}/close`).then(res => {
+    instance.patch(`/api/${type}-lessons/${id}/close`).then(res => {
       console.log(res)
     })
   }
@@ -66,8 +66,7 @@ export default function DetailClassModal({ id, type, isOpen, handleClose }: IPro
   }
 
   useEffect(() => {
-    instance.get(`/${type}-lessons/${id}/details`).then(res => {
-      console.log(res)
+    instance.get(`/api/${type}-lessons/${id}/details`).then(res => {
       const classData = res.data.data
       setClassDetail(prev => ({
         ...prev,
@@ -145,7 +144,8 @@ export default function DetailClassModal({ id, type, isOpen, handleClose }: IPro
                         (data: { startTime: string; endTime: string; repeatDate: string }, i) => {
                           return (
                             <div key={i} className="w-full gray-800-medium text-base">
-                              {formatStartTime(data.startTime)} ~ {formatStartTime(data.endTime)} / {data.repeatDate}
+                              {formatStartTime(data.startTime)} ~ {formatStartTime(data.endTime)} / {data.repeatDate}{' '}
+                              반복
                             </div>
                           )
                         }

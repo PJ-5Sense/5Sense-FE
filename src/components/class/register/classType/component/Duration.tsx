@@ -3,17 +3,18 @@ import { Button, Modal } from 'flowbite-react'
 import { UseFormReturn } from 'react-hook-form'
 import { useRecoilValue } from 'recoil'
 
-import { classDataType } from '@/app/(service)/(nav)/class/register/page'
 import RoomReservation from '@/components/room/RoomReservation'
 import UseModal from '@/hooks/useModal'
 import PlusIcon from '@/icons/icon/plus.svg'
 import { getKoreanNumber } from '@/utils'
 import DurationScheduleCheck from '../../../../check/ClassDurationScheduleCheck'
 import { Props } from '..'
+import { useParams } from 'next/navigation'
 
 export default function Duration({ register, watch, formState, getValues, edit }: Props) {
   const { errors, defaultValues } = formState
   const duarationSchedule = useRecoilValue(durationClassScheduleState)
+  const params = useParams()
 
   const [Schedule, close, open] = UseModal()
 
@@ -52,6 +53,7 @@ export default function Duration({ register, watch, formState, getValues, edit }
           className="w-full h-[60px] border-b-2 border-x-0 border-t-0 flex-col justify-center items-start gray-900-semibold text-2xl placeholder:text-gray-300 focus:shadow-none focus:border-current focus:ring-0 focus:ring-transparent"
           placeholder="0 원"
           {...register('tuitionFee', { required: true })}
+          onWheel={e => e.currentTarget.blur()}
         />
         <p className="text-gray-500 text-sm font-normal font-['Inter']">
           {getKoreanNumber(watch('tuitionFee').toString())}원
@@ -67,12 +69,12 @@ export default function Duration({ register, watch, formState, getValues, edit }
         )}
 
         {/**여기 일정 UI 들어가면 됩니다. */}
-        <DurationScheduleCheck />
+        <DurationScheduleCheck edit={edit} onClick={open} />
       </div>
       <Modal size="md" show={Schedule} onClose={close}>
         <Modal.Header>일정 추가</Modal.Header>
         <Modal.Body>
-          <RoomReservation classType="duration" viewType="modal" onClose={close} />
+          <RoomReservation classType="duration" viewType="modal" onClose={close} edit={edit} />
         </Modal.Body>
       </Modal>
     </div>

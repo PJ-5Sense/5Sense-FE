@@ -1,12 +1,10 @@
 'use client'
 import { ClassType, useEffect, useRef, useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
-import { useRouter, useParams } from 'next/navigation'
 
 import LessonTimeModal from '../modal/RoundLessonTimeModal'
 import { durationClassScheduleState } from '@/lib/state/classDurationSchedule'
 import { lessonTimeState } from '@/lib/state/lessonTime'
-import { modalState } from '@/lib/state/modal'
 import { dateDataType } from '../common/calendar/datePicker/dayDatePIcker'
 import DayDatePicker from '../common/calendar/datePicker/dayDatePIcker'
 import PeriodDatePicker from '../common/calendar/datePicker/periodDatePicker'
@@ -25,16 +23,6 @@ import UserIcon from 'public/assets/icons/user.svg'
 import CalendarIcon from '@/icons/icon/datePicker/calendar.svg'
 import ClockIcon from '@/icons/icon/clock.svg'
 
-interface RoomDataType {
-  id: number
-  name: string
-  personNum: number
-  list: {
-    openTimeList: string[]
-    roomClickList: string[]
-  }
-}
-
 interface IProps {
   class?: classType
   classType: string
@@ -42,19 +30,18 @@ interface IProps {
   onClose: () => void
   lessonTime?: string
   paymentStatus?: string
+  edit?: boolean
 }
 
 export default function RoomReservation(props: IProps) {
+  console.log('test')
   const refs = useRef<(HTMLDivElement | null)[]>([])
   const durationSchedules = useRecoilValue(durationClassScheduleState)
   const sessionSchedules = useRecoilValue(sessionScheduleState)
   const setDurationSchedule = useSetRecoilState(durationClassScheduleState)
   const setSessionSchedule = useSetRecoilState(sessionScheduleState)
-  const setLessonTimeState = useSetRecoilState(lessonTimeState)
   const calendarDate = useRecoilValue(DayCalendarDateState)
-  const setCalendarDate = useSetRecoilState(DayCalendarDateState)
   const centerInfo = useRecoilValue(centerInfoState)
-  const timeListByHalfHour = calculateRervationTime(centerInfo.open, centerInfo.close)
   const timeListByHour = getTimeListByHour(centerInfo.open, centerInfo.close)
 
   const [dateValue, setDateValue] = useState<string>('날짜')
@@ -83,16 +70,17 @@ export default function RoomReservation(props: IProps) {
     }
 
     if (type === 'duration') {
-      console.log(data)
       if (data.length === 1) {
+        /* date 오름 차순으로 변경 */
+        data[0].date.sort((a: number, b: number) => a - b)
         setDateValue(
-          `${data[0].year}.${data[0].month + 1}.${data[0].date[0]}~${data[0].year}.${data[0].month + 1}.${
+          `${data[0].year}.${data[0].month + 1}.${data[0].date[0]} ~ ${data[0].year}.${data[0].month + 1}.${
             data[0].date[1]
           }`
         )
       } else {
         setDateValue(
-          `${data[0].year}.${data[0].month + 1}.${data[0].date[0]}~${data[1].year}.${data[1].month + 1}.${
+          `${data[0].year}.${data[0].month + 1}.${data[0].date[0]} ~ ${data[1].year}.${data[1].month + 1}.${
             data[1].date[0]
           }`
         )
@@ -139,7 +127,7 @@ export default function RoomReservation(props: IProps) {
 
   const getSessionRoomData = (classId: number) => {
     const date = dateValue.split('.')
-    instance('/lesson-rooms/daily', {
+    instance('/api/lesson-rooms/daily', {
       params: {
         date: new Date(calendarDate.year, calendarDate.month, calendarDate.date).toISOString()
       }
@@ -191,17 +179,13 @@ export default function RoomReservation(props: IProps) {
 
   const getDurationRoomData = () => {
     const date = {
-      start: dateValue.split('~')[0].split('.'),
-      end: dateValue.split('~')[1].split('.')
+      start: dateValue.replaceAll(' ', '').split('~')[0].split('.'),
+      end: dateValue.replaceAll(' ', '').split('~')[1].split('.')
     }
-    console.log(
-      lessonTime.split(',')[0].replace('  반복', '').replaceAll(' ', ','),
-      lessonTime.split(',')[0].replace('  반복', '').length
-    )
     const repeatDate = lessonTime.split(',')[0].replace('  반복', '').replaceAll(' ', ',')
     const startDate = new Date(Number(date.start[0]), Number(date.start[1]) - 1, Number(date.start[2])).toISOString()
     const endDate = new Date(Number(date.end[0]), Number(date.end[1]) - 1, Number(date.end[2])).toISOString()
-    instance('/lesson-rooms/range', {
+    instance('/api/lesson-rooms/range', {
       params: {
         startDate: startDate,
         endDate: endDate,
@@ -269,7 +253,7 @@ export default function RoomReservation(props: IProps) {
     const startDate = new Date(durationSchedules[0].startDate)
     const endDate = new Date(durationSchedules[0].endDate)
 
-    return `${startDate.getFullYear()}.${startDate.getMonth() + 1}.${startDate.getDate()} - ${endDate.getFullYear()}.${
+    return `${startDate.getFullYear()}.${startDate.getMonth() + 1}.${startDate.getDate()} ~ ${endDate.getFullYear()}.${
       endDate.getMonth() + 1
     }.${endDate.getDate()}`
   }
@@ -319,9 +303,8 @@ export default function RoomReservation(props: IProps) {
 
       const studentId = localStorage.getItem('studentId') as string
       if (studentId !== null) {
-        instance(`/students/${studentId}`).then(res => {
+        instance(`/api/students/${studentId}`).then(res => {
           const sessionLessons = res.data.data.sessionLessons
-          console.log(sessionLessons)
           const alreadyRigisteredLessons = sessionLessons.filter(
             (data: any, i: number) => props.class && data.id === props.class.id
           )
@@ -341,7 +324,13 @@ export default function RoomReservation(props: IProps) {
     }
   }, [calendarDate])
 
-  console.log(sessionSchedules)
+  useEffect(() => {
+    if (props.edit) {
+      setDateValue(selectedDate())
+    }
+  }, [])
+
+  console.log(dateValue)
 
   return (
     <>
@@ -422,7 +411,6 @@ export default function RoomReservation(props: IProps) {
             onClick={() => {
               if (dateValue !== '날짜' && lessonTime !== '시간') {
                 setIsClickedSearch(true)
-                console.log(dateValue, lessonTime, durationSchedules, props.classType)
                 if (props.classType === 'session' && props.class) {
                   getSessionRoomData(props.class.id)
                 } else if (props.classType === 'duration') {
@@ -534,8 +522,8 @@ export default function RoomReservation(props: IProps) {
                           } else if (props.classType === 'duration') {
                             /* 기간반 */
                             if (timeRange !== undefined && durationSchedules.length === 0) {
-                              const startDateData = dateValue.split('~')[0].split('.')
-                              const endDateData = dateValue.split('~')[1].split('.')
+                              const startDateData = dateValue.replaceAll(' ', '').split('~')[0].split('.')
+                              const endDateData = dateValue.replaceAll(' ', '').split('~')[1].split('.')
                               setDurationSchedule(prev => [
                                 ...prev,
                                 {
@@ -549,8 +537,8 @@ export default function RoomReservation(props: IProps) {
                                     Number(endDateData[1]) - 1,
                                     Number(endDateData[2])
                                   ).toISOString(),
-                                  startTime: calculateLessonTimeOfRoom(timeRange).startTime,
-                                  endTime: calculateLessonTimeOfRoom(timeRange).endTime,
+                                  startTime: calculateLessonTimeOfRoom(timeRange).startTime + ':00',
+                                  endTime: calculateLessonTimeOfRoom(timeRange).endTime + ':00',
                                   repeatDate: lessonTime.split(',')[0].replace('  반복', '').replaceAll(' ', ','),
                                   roomId: roomId,
                                   lessonTime: calculatePeriodClassLessonTime()
@@ -558,7 +546,32 @@ export default function RoomReservation(props: IProps) {
                               ])
                               /* 모달 닫기 */
                               props.onClose && props.onClose()
-                            } else if (timeRange !== undefined && durationSchedules.length >= 1) {
+                            } else if (timeRange !== undefined && props.edit) {
+                              const startDateData = dateValue.replaceAll(' ', '').split('~')[0].split('.')
+                              const endDateData = dateValue.replaceAll(' ', '').split('~')[1].split('.')
+                              setDurationSchedule(prev => [
+                                {
+                                  startDate: new Date(
+                                    Number(startDateData[0]),
+                                    Number(startDateData[1]) - 1,
+                                    Number(startDateData[2])
+                                  ).toISOString(),
+                                  endDate: new Date(
+                                    Number(endDateData[0]),
+                                    Number(endDateData[1]) - 1,
+                                    Number(endDateData[2])
+                                  ).toISOString(),
+                                  startTime: calculateLessonTimeOfRoom(timeRange).startTime + ':00',
+                                  endTime: calculateLessonTimeOfRoom(timeRange).endTime + ':00',
+                                  repeatDate: lessonTime.split(',')[0].replace('  반복', '').replaceAll(' ', ','),
+                                  roomId: roomId,
+                                  lessonTime: calculatePeriodClassLessonTime()
+                                }
+                              ])
+                              props.onClose && props.onClose()
+                            }
+
+                            /* else if (timeRange !== undefined && durationSchedules.length >= 1) {
                               setDurationSchedule(prev => [
                                 ...prev,
                                 {
@@ -571,7 +584,7 @@ export default function RoomReservation(props: IProps) {
                                   lessonTime: calculatePeriodClassLessonTime()
                                 }
                               ])
-                            }
+                            } */
                           }
                         }}
                       >

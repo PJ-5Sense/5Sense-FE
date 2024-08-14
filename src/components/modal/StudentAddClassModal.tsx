@@ -1,5 +1,4 @@
 'use client'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useSetRecoilState } from 'recoil'
@@ -43,8 +42,6 @@ export default function StudentAddClassModal({ onClose }: IProps) {
     setSelectedClass(data)
   }
 
-  console.log(selectedClass)
-
   const handleClickPayment = () => {
     setIsPaid(prev => !prev)
   }
@@ -55,10 +52,9 @@ export default function StudentAddClassModal({ onClose }: IProps) {
   })
 
   const durationRigister = () => {
-    instance(`/duration-lessons/${selectedClass.id}/details`).then(res => {
+    instance(`/api/duration-lessons/${selectedClass.id}/details`).then(res => {
       const lessonData = res.data.data
       const schedule = lessonData.schedules[0]
-      console.log(lessonData)
       setDurationSchedule(prev => [
         ...prev,
         {
@@ -80,8 +76,7 @@ export default function StudentAddClassModal({ onClose }: IProps) {
 
   useEffect(() => {
     if (classType === 'duration') {
-      instance(`/duration-lessons`).then(res => {
-        console.log(res)
+      instance(`/api/duration-lessons`).then(res => {
         const lessonData = res.data.data
         setDropDownProps(prev => ({
           ...prev,
@@ -89,14 +84,12 @@ export default function StudentAddClassModal({ onClose }: IProps) {
         }))
       })
     } else if (classType === 'session') {
-      instance(`/session-lessons`, {
+      instance(`/api/session-lessons`, {
         params: {
           isCheckRegistrationsCount: true
         }
       }).then(res => {
-        console.log(res)
         const lessonData = res.data.data
-
         setDropDownProps(prev => ({
           ...prev,
           list: lessonData
@@ -113,7 +106,6 @@ export default function StudentAddClassModal({ onClose }: IProps) {
     }
   }, [classType])
 
-  console.log(selectedClass)
   return (
     <div className="w-full flex flex-col gap-10">
       {/* 회차/기간반 버튼 */}
@@ -155,7 +147,6 @@ export default function StudentAddClassModal({ onClose }: IProps) {
         </button>
       </div>
       {/* 클래스 선택 */}
-
       {classType === 'duration' && (
         <>
           <div className="w-full flex flex-col gap-2">

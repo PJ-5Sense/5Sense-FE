@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 import SearchInput from '@/components/common/SearchInput'
 import { metaType } from '../student/page'
@@ -57,11 +57,64 @@ export default function PayPage() {
     }))
   }
 
+  const infiniteScroll = useCallback(() => {
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 1.0
+    }
+
+    const getData = () => {
+      if (inputData.value === '') {
+        instance(`/api/billing-payments?searchBy=none&page=${metaData.page + 1}&PaymentStatus=All`).then(res => {
+          const studentsData = res.data.data.billingPayments
+          const meta = res.data.data.meta
+          setStudentList(prev => [...prev, ...studentsData])
+          setMetaData(prev => ({
+            ...prev,
+            page: meta.page,
+            hasNextPage: meta.hasNextPage
+          }))
+          setIsLoading(false)
+        })
+      } else {
+        instance(
+          `/api/billing-payments?searchBy=${inputData.searchBy}&${inputData.searchBy}=${inputData.value}&page=${
+            metaData.page + 1
+          }&PaymentStatus=${currentPaymentStatus}`
+        ).then(res => {
+          const studentsData = res.data.data.billingPayments
+          const meta = res.data.data.meta
+          setStudentList(prev => [...prev, ...studentsData])
+          setMetaData(prev => ({
+            ...prev,
+            page: meta.page,
+            hasNextPage: meta.hasNextPage
+          }))
+          setIsLoading(false)
+        })
+      }
+    }
+
+    const callback = (entry: any) => {
+      if (entry[0].isIntersecting) {
+        setIsLoading(true)
+        setTimeout(() => {
+          getData()
+        }, 500)
+      }
+    }
+    const observer = new IntersectionObserver(callback, options)
+    if (target.current) {
+      observer.observe(target.current)
+    }
+  }, [metaData])
+
   useEffect(() => {
     let requestUrl =
       inputData.value === ''
-        ? `/billing-payments?page=1&take=10&searchBy=none&PaymentStatus=${currentPaymentStatus}`
-        : `/billing-payments?page=1&take=10&searchBy=${inputData.searchBy}&${inputData.searchBy}=${inputData.value}&PaymentStatus=${currentPaymentStatus}`
+        ? `/api/billing-payments?page=1&take=10&searchBy=none&PaymentStatus=${currentPaymentStatus}`
+        : `/api/billing-payments?page=1&take=10&searchBy=${inputData.searchBy}&${inputData.searchBy}=${inputData.value}&PaymentStatus=${currentPaymentStatus}`
     instance(requestUrl).then(res => {
       const studentsData = res.data.data.billingPayments
       const meta = res.data.data.meta
@@ -77,66 +130,9 @@ export default function PayPage() {
 
   useEffect(() => {
     if (metaData.hasNextPage) {
-      const options = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 1.0
-      }
-
-      const getData = () => {
-        if (inputData.value === '') {
-          instance(`/billing-payments?searchBy=none&page=${metaData.page + 1}&PaymentStatus=All`).then(res => {
-            const studentsData = res.data.data.billingPayments
-            const meta = res.data.data.meta
-            setStudentList(prev => [...prev, ...studentsData])
-            setMetaData(prev => ({
-              ...prev,
-              page: meta.page,
-              hasNextPage: meta.hasNextPage
-            }))
-            setIsLoading(false)
-          })
-        } else {
-          instance(
-            `/billing-payments?searchBy=${inputData.searchBy}&${inputData.searchBy}=${inputData.value}&page=${
-              metaData.page + 1
-            }&PaymentStatus=${currentPaymentStatus}`
-          ).then(res => {
-            const studentsData = res.data.data.billingPayments
-            const meta = res.data.data.meta
-            setStudentList(prev => [...prev, ...studentsData])
-            setMetaData(prev => ({
-              ...prev,
-              page: meta.page,
-              hasNextPage: meta.hasNextPage
-            }))
-            setIsLoading(false)
-          })
-        }
-      }
-
-      const callback = (entry: any) => {
-        if (entry[0].isIntersecting) {
-          setIsLoading(true)
-          setTimeout(() => {
-            getData()
-          }, 500)
-        }
-      }
-      const observer = new IntersectionObserver(callback, options)
-      if (target.current) {
-        observer.observe(target.current)
-      }
-
-      return () => {
-        if (observer && target.current) {
-          observer.unobserve(target.current)
-        }
-      }
+      infiniteScroll()
     }
   }, [metaData])
-
-  console.log(studentList)
 
   return (
     <div>
@@ -255,12 +251,12 @@ export default function PayPage() {
                         onClick={() => {
                           if (confirm('결제상태를 변경하시겠습니까?')) {
                             instance
-                              .patch(`/billing-payments/${data.id}`, {
+                              .patch(`/api/billing-payments/${data.id}`, {
                                 paymentStatus: 'Unpaid'
                               })
                               .then(res => {
                                 instance(
-                                  `/billing-payments?page=1&take=10&searchBy=none&PaymentStatus=${currentPaymentStatus}`
+                                  `/api/billing-payments?page=1&take=10&searchBy=none&PaymentStatus=${currentPaymentStatus}`
                                 ).then(res => {
                                   const studentsData = res.data.data.billingPayments
                                   const meta = res.data.data.meta
@@ -282,12 +278,12 @@ export default function PayPage() {
                         onClick={() => {
                           if (confirm('결제상태를 변경하시겠습니까?')) {
                             instance
-                              .patch(`/billing-payments/${data.id}`, {
+                              .patch(`/api/billing-payments/${data.id}`, {
                                 paymentStatus: 'Paid'
                               })
                               .then(res => {
                                 instance(
-                                  `/billing-payments?page=1&take=10&searchBy=none&PaymentStatus=${currentPaymentStatus}`
+                                  `/api/billing-payments?page=1&take=10&searchBy=none&PaymentStatus=${currentPaymentStatus}`
                                 ).then(res => {
                                   const studentsData = res.data.data.billingPayments
                                   const meta = res.data.data.meta

@@ -8,12 +8,12 @@ import { Drawer } from 'flowbite-react'
 
 //내장
 import { metaType } from '../student/page'
-import { modalState } from '@/lib/state/modal'
 import instance from '@/lib/api/axios'
 import DetailInstructor from '@/components/modal/DetailInstructor'
 import SearchInput from '@/components/common/SearchInput'
 import NotFoundPage from '@/components/common/NotFoundPage'
 import { changePhoneNumberToString } from '@/utils'
+import AddInstructor from '@/components/modal/AddInstructor'
 
 //이미지
 import ChevronRightIcon from 'public/assets/icons/chevron/chevron_right_pri_600.svg'
@@ -26,21 +26,17 @@ interface instructorType {
 }
 
 export default function InstructorPage() {
-  const inputRef = useRef<HTMLInputElement>(null)
   const target = useRef<HTMLDivElement>(null)
 
   // 모달 상태관리
-  const modal = useRecoilValue(modalState)
-  const setModal = useSetRecoilState(modalState)
-  const [isClickedRegister, setIsClickedRegister] = useState<boolean>(false)
   const [isRegistered, setIsRegistered] = useState<boolean>(false)
-  const [isOpen, setIsOpen] = useState<{ detail: boolean; addInstructor: false }>({
+  const [isOpen, setIsOpen] = useState<{ detail: boolean; addInstructor: boolean }>({
     detail: false,
     addInstructor: false
   })
 
   const [instructorList, setInstructorList] = useState<instructorType[]>([])
-  const [InstructorId, setInstructorId] = useState<number>(0)
+  const [instructorId, setInstructorId] = useState<string>('')
   const [metaData, setMetaData] = useState<metaType>({
     page: 1,
     hasNextPage: false
@@ -69,7 +65,7 @@ export default function InstructorPage() {
 
   /* 첫 로딩 실행 */
   useEffect(() => {
-    instance('/teachers?searchBy=none').then(res => {
+    instance('/api/teachers?searchBy=none').then(res => {
       const instructorsData = res.data.data.teachers
       const meta = res.data.data.meta
       setInstructorList(instructorsData)
@@ -85,7 +81,7 @@ export default function InstructorPage() {
   /* 강사 등록하면 새로 강사 리스트 가져오기 */
   useEffect(() => {
     if (isRegistered) {
-      instance('/teachers?searchBy=none').then(res => {
+      instance('/api/teachers?searchBy=none').then(res => {
         const instructorsData = res.data.data.teachers
         const meta = res.data.data.meta
         setInstructorList(instructorsData)
@@ -110,7 +106,7 @@ export default function InstructorPage() {
 
       const getData = () => {
         if (inputData.value === '') {
-          instance(`/teachers?searchBy=none&page=${metaData.page + 1}`).then(res => {
+          instance(`/api/teachers?searchBy=none&page=${metaData.page + 1}`).then(res => {
             const instructorsData = res.data.data.teachers
             const meta = res.data.data.meta
             setInstructorList(prev => [...prev, ...instructorsData])
@@ -123,7 +119,7 @@ export default function InstructorPage() {
           })
         } else {
           instance(
-            `/teachers?searchBy=${inputData.searchBy}&${inputData.searchBy}=${inputData.value}&page=${
+            `/api/teachers?searchBy=${inputData.searchBy}&${inputData.searchBy}=${inputData.value}&page=${
               metaData.page + 1
             }`
           ).then(res => {
@@ -167,8 +163,10 @@ export default function InstructorPage() {
         title="강사 관리"
         btnName="강사 등록"
         onClick={() => {
-          setIsClickedRegister(true)
-          setModal(true)
+          setIsOpen(prev => ({
+            ...prev,
+            addInstructor: true
+          }))
         }}
       />
       {/* 검색창 */}
@@ -202,7 +200,7 @@ export default function InstructorPage() {
                       ...prev,
                       detail: true
                     }))
-                    localStorage.setItem('instructorId', id)
+                    setInstructorId(id)
                   }}
                 >
                   <div className="indigo-500-semibold text-sm ">강사 정보</div>
@@ -237,9 +235,34 @@ export default function InstructorPage() {
         >
           <Drawer.Header />
           <Drawer.Items>
-            <DetailInstructor />
+            <DetailInstructor id={instructorId} />
           </Drawer.Items>
         </Drawer>
+      )}
+      {isOpen.addInstructor && (
+        <Modal
+          size="sm"
+          show={true}
+          onClose={() => {
+            setIsOpen(prev => ({
+              ...prev,
+              addInstructor: false
+            }))
+          }}
+        >
+          <Modal.Header>일정 추가</Modal.Header>
+          <Modal.Body>
+            <AddInstructor
+              onClose={() => {
+                setIsOpen(prev => ({
+                  ...prev,
+                  addInstructor: false
+                }))
+                setIsRegistered(true)
+              }}
+            />
+          </Modal.Body>
+        </Modal>
       )}
     </>
   )

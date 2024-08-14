@@ -3,31 +3,27 @@ import { useState, useRef, useEffect } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { useRouter } from 'next/navigation'
 
-import { modalState } from '@/lib/state/modal'
-import DeleteModal from '@/components/modal/DeleteModal'
-import Modal from '@/components/common/modal'
 import { RoomDetailsState } from '@/lib/state/roomDetails'
 
-import ChevronLeftIcon from 'public/assets/icons/chevron/chevron-left.svg'
-import ChevronRightIcon from 'public/assets/icons/chevron/chevron-right.svg'
 import UserIcon from 'public/assets/icons/user_icon.svg'
 import DotsIcon from 'public/assets/icons/dotsVertical.svg'
-import ModifyIcon from 'public/assets/icons/modify.svg'
+import ModifyIcon from '@/icons/icon/modify.svg'
 import Plus from '@/icons/icon/plus.svg'
 import Trash from '@/icons/icon/trash.svg'
+import ChevronLeftIcon from '@/icons/icon/room/chevronLeft.svg'
+import ChevronRightIcon from '@/icons/icon/room/chevronRight.svg'
 
 interface IProps {
   roomData: { id: number; name: string; capacity: number; workTime: any }[][]
   onChangeRoomList: (num: number) => void
   indexOfRoomList: number
+  onDeleteRoom: (roomId: number) => void
 }
 
-export default function RoomList({ roomData, onChangeRoomList, indexOfRoomList }: IProps) {
+export default function RoomList({ roomData, onChangeRoomList, indexOfRoomList, onDeleteRoom }: IProps) {
   const router = useRouter()
   const optionRef = useRef<HTMLButtonElement>(null)
 
-  const modal = useRecoilValue(modalState) // 상태의 값을 가져옴
-  const setModal = useSetRecoilState(modalState)
   const setRoomDetailsState = useSetRecoilState(RoomDetailsState)
 
   const [roomOption, setRoomOption] = useState<{
@@ -42,7 +38,7 @@ export default function RoomList({ roomData, onChangeRoomList, indexOfRoomList }
     <div className="relative mt-[32px] w-full pl-[84px]">
       {indexOfRoomList !== 0 && (
         <span
-          className="absolute z-10 w-6 h-6 left-[72px] top-7 bg-white flex items-center justify-center border border-1 border-gray-200 rounded-full cursor-pointer"
+          className="absolute z-10 w-6 h-6 left-[72px] top-7 flex items-center justify-center border border-1 border-gray-200 rounded-full cursor-pointer bg-primary-50"
           onClick={() => {
             if (indexOfRoomList === 0) {
               return
@@ -56,7 +52,7 @@ export default function RoomList({ roomData, onChangeRoomList, indexOfRoomList }
       )}
       {indexOfRoomList !== roomData.length - 1 && (
         <span
-          className="absolute z-10 w-6 h-6 -right-3 top-7 bg-white flex items-center justify-center border border-1 border-gray-200 rounded-full cursor-pointer"
+          className="absolute z-10 w-6 h-6 -right-3 top-7 flex items-center justify-center border border-1 border-gray-200 rounded-full cursor-pointer bg-primary-50"
           onClick={() => {
             if (indexOfRoomList === roomData.length - 1) {
               return
@@ -68,10 +64,9 @@ export default function RoomList({ roomData, onChangeRoomList, indexOfRoomList }
           <ChevronRightIcon width={16} height={16} alt="chevronRight" />
         </span>
       )}
-
       <div className="w-full grid grid-cols-4 gap-2">
         {roomData.length !== 0 &&
-          roomData[indexOfRoomList].map((data: any, i: number) => {
+          roomData[indexOfRoomList].map((data, i) => {
             return (
               <div
                 key={i}
@@ -114,7 +109,7 @@ export default function RoomList({ roomData, onChangeRoomList, indexOfRoomList }
                 ) : (
                   <button
                     className="w-full h-full flex justify-center items-center"
-                    onClick={() => router.push('/room/register')}
+                    onClick={() => router.push(`/room/register`)}
                   >
                     <Plus className="text-gray-400" />
                   </button>
@@ -132,8 +127,7 @@ export default function RoomList({ roomData, onChangeRoomList, indexOfRoomList }
                           name: data.name,
                           capacity: data.capacity
                         }))
-                        localStorage.setItem('roomId', data.id)
-                        router.push('/room/modifyRoom')
+                        router.push(`/room/modifyRoom/${data.id}`)
                       }}
                     >
                       <div className="w-[98px] gray-500-medium text-sm">수정하기</div>
@@ -143,7 +137,7 @@ export default function RoomList({ roomData, onChangeRoomList, indexOfRoomList }
                       type="button"
                       className="w-full flex items-center justify-between px-2 py-1 rounded-[3px] hover:bg-primary-100"
                       onClick={() => {
-                        setModal(true)
+                        onDeleteRoom(data.id)
                       }}
                     >
                       <div className="w-[98px] gray-500-medium text-sm">삭제하기</div>
@@ -155,12 +149,6 @@ export default function RoomList({ roomData, onChangeRoomList, indexOfRoomList }
             )
           })}
       </div>
-      {/* 룸 삭제 모달 */}
-      {/* {modal && (
-        <Modal small>
-          <DeleteModal onClose={() => setModal(false)} roomId={roomOption.roomId} />
-        </Modal>
-      )} */}
     </div>
   )
 }

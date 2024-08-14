@@ -1,7 +1,5 @@
 'use client'
-import Link from 'next/link'
 import { useRouter, useParams } from 'next/navigation'
-import { AxiosResponse } from 'axios'
 import { SetStateAction, useEffect, useState } from 'react'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { Modal, Button } from 'flowbite-react'
@@ -10,7 +8,6 @@ import useInputNum from '@/hooks/useInputNum'
 import instance from '@/lib/api/axios'
 import UseModal from '@/hooks/useModal'
 import StudentAddClassModal from '@/components/modal/StudentAddClassModal'
-import { modalState } from '@/lib/state/modal'
 import StudentsSession from '@/components/studentsDetail/card/studentsSession'
 import StudentsDuration from '@/components/studentsDetail/card/studentsDuartion'
 import { sessionScheduleState } from '@/lib/state/studentSessionSchedule'
@@ -38,15 +35,14 @@ export interface InputNumProps {
   setSubmitData: React.Dispatch<SetStateAction<any>>
 }
 
-export default function StudentEdit() {
+export default function StudentEdit({ params }: { params: { studentId: string } }) {
+  const studentId = params.studentId
   const router = useRouter()
   const durationSchedule = useRecoilValue(studentDurationScheduleState)
   const sessionSchedule = useRecoilValue(sessionScheduleState)
   const setDurationSchedule = useSetRecoilState(studentDurationScheduleState)
   const setSessionSchedule = useSetRecoilState(sessionScheduleState)
   const setDayCalenderState = useSetRecoilState(DayCalendarDateState)
-
-  console.log(sessionSchedule)
 
   const [Schedule, close, open] = UseModal()
 
@@ -91,14 +87,14 @@ export default function StudentEdit() {
         }
         /* 수강생 정보 수정에서 새로운 회차반 클래스 추가하고 일정추가를 하는 경우 */
         instance
-          .post('/session-lesson-registrations', {
+          .post('/api/session-lesson-registrations', {
             studentId: studentInfo.id,
             lessonId: sessionSchedule[0].lessonId,
             paymentStatus: sessionSchedule[0].paymentStatus
           })
           .then(res => {
             instance
-              .post('/session-lesson-schedules', {
+              .post('/api/session-lesson-schedules', {
                 lessonId: sessionSchedule[0].lessonId,
                 studentId: studentInfo.id,
                 sessionDate: new Date(sessionDate.year, sessionDate.month, sessionDate.date).toISOString(),
@@ -118,7 +114,7 @@ export default function StudentEdit() {
           date: Number(sessionSchedule[0].sessionDate.split('.')[2])
         }
         instance
-          .post('/session-lesson-schedules', {
+          .post('/api/session-lesson-schedules', {
             lessonId: sessionSchedule[0].lessonId,
             studentId: studentInfo.id,
             sessionDate: new Date(sessionDate.year, sessionDate.month, sessionDate.date).toISOString(),
@@ -127,12 +123,12 @@ export default function StudentEdit() {
             roomId: sessionSchedule[0].roomId
           })
           .then(res => {
-            router.push('/student')
+            router.push('/api/student')
           })
       }
     } else if (durationSchedule.length !== 0) {
       instance
-        .post('/duration-lesson-registrations', {
+        .post('/api/duration-lesson-registrations', {
           studentId: studentInfo.id,
           lessonId: durationSchedule[0].classId,
           paymentStatus: durationSchedule[0].paymentStatus
@@ -143,7 +139,7 @@ export default function StudentEdit() {
     } else if (sessionSchedule.length === 0 && durationSchedule.length === 0) {
       /* 단순 수강생 정보 수정 */
       instance
-        .put(`students/${studentInfo.id}`, {
+        .put(`/api/students/${studentInfo.id}`, {
           name: studentInfo.name,
           phone: studentInfo.phone,
           particulars: studentInfo.particulars
@@ -163,14 +159,13 @@ export default function StudentEdit() {
   }
 
   useEffect(() => {
-    const studentId = localStorage.getItem('studentId')
+    //const studentId = localStorage.getItem('studentId')
     setStudentInfo(prev => ({
       ...prev,
       id: Number(studentId)
     }))
-    instance(`/students/${studentId}`).then(res => {
+    instance(`/api/students/${studentId}`).then(res => {
       const studentData = res.data.data
-      console.log(studentData)
       setStudentInfo(prev => ({
         ...prev,
         name: studentData.name,
@@ -193,8 +188,6 @@ export default function StudentEdit() {
       localStorage.removeItem('studentId')
     }
   }, [])
-
-  console.log(sessionSchedule, studentInfo)
 
   return (
     <div className="w-full flex flex-col items-center pb-[60px]">
@@ -233,6 +226,7 @@ export default function StudentEdit() {
                   placeholder="전화번호를 입력해주세요 (-제외)"
                   value={studentInfo.phone}
                   onChange={onInputHandler}
+                  onWheel={e => e.currentTarget.blur()}
                   maxLength={12}
                 />
                 <div className="w-full text-right gray-500-normal text-sm font-['Inter']">
@@ -304,6 +298,7 @@ export default function StudentEdit() {
                 studentInfo.durationLessons.map((data, i) => {
                   return (
                     <StudentsDuration
+                      key={i}
                       className={data.name}
                       paymentStatus={data.paymentStatus}
                       type="check"

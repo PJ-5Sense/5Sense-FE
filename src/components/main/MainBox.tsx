@@ -14,9 +14,6 @@ export type IncomeStatisticsType = {
 
 export default function MainBox() {
   const { width, height } = useWindowSize()
-  const router = useRouter()
-  const currentUrl = usePathname()
-  const currentPath = currentUrl.split('/')[2]
   const incomeData: IncomeStatisticsType[] = [
     {
       rounded: 'rounded-l-xl',
@@ -92,14 +89,9 @@ export default function MainBox() {
     }
   ]
 
-  let [cor, setCor] = useState({ cor_x: 0, cor_y: 0 })
-  let [onMouse, setOnMouse] = useState(false)
-
   return (
     <div
-      className={`w-full items-start ${width > 1180 ? 'flex' : ' flex flex-col'} ${
-        width > 1180 ? 'gap-6' : 'gap-4'
-      }`}
+      className={`w-full items-start ${width > 1180 ? 'flex' : ' flex flex-col'} ${width > 1180 ? 'gap-6' : 'gap-4'}`}
     >
       <div className="w-full h-[247px] flex outline outline-1 rounded-xl outline-gray-200 ">
         {incomeData.map((data, i) => {
@@ -118,7 +110,9 @@ export default function MainBox() {
                     return (
                       <div key={i} className="w-full flex gap-1 items-center">
                         <span className={`w-3 h-[9px] rounded-[3px] ${data.bg_color}`}></span>
-                        <span className="w-8 h-[18px] text-gray-800 text-xs font-bold leading-[18px]">{data.percentage}</span>
+                        <span className="w-8 h-[18px] text-gray-800 text-xs font-bold leading-[18px]">
+                          {data.percentage}
+                        </span>
                         <span className="text-gray-400 flex-1 w-1 min-w-8 truncate h-[18px] text-xs font-medium leading-[18px]">
                           {data.className}
                         </span>
@@ -126,8 +120,8 @@ export default function MainBox() {
                     )
                   })}
                 </div>
-                <div className='w-[110px] h-[110px]'>
-                <IncomeStatistics props={incomeData} />  
+                <div className="w-[110px] h-[110px]">
+                  <IncomeStatistics props={incomeData} />
                 </div>
               </div>
             </div>
@@ -157,8 +151,8 @@ export default function MainBox() {
               )
             })}
           </div>
-          <div className='w-[110px] h-[110px]'>
-          <StudentStatistics />
+          <div className="w-[110px] h-[110px]">
+            <StudentStatistics />
           </div>
         </div>
       </div>

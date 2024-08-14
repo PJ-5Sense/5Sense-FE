@@ -4,38 +4,21 @@ import { useRecoilState } from 'recoil'
 import { dateSideTab } from '@/app/recoilContextProvider'
 
 export default function DateSlideTab() {
-  const currentDate = new Date()
   const router = useRouter()
   const currentPath = usePathname()
 
   let [slideTab, setSlideTab] = useRecoilState(dateSideTab)
-  let [pathName, setPathName] = useState<string>('')
 
   useEffect(() => {
     let path = currentPath.split('/')[2]
     if (path === 'day' || path === undefined) {
-      setPathName('day')
       setSlideTab('translate-x-0')
     } else if (path === 'week') {
-      //console.log(currentPath.split('/')[2])
       setSlideTab('translate-x-[48px]')
-      setPathName('week')
     } else if (path === 'month') {
       setSlideTab('translate-x-[96px]')
-      setPathName('month')
     }
   }, [currentPath])
-
-  const dateData = {
-    year: currentDate.getFullYear(),
-    month: currentDate.getMonth() + 1,
-    date: currentDate.getDate()
-  }
-
-  const [date, setDate] = useState<number>(dateData.date)
-  const firstDayOfYear = new Date(currentDate.getFullYear(), 0, 1)
-  const lastDateOfMonth = new Date(2023, 2, 0)
-
 
   return (
     <>

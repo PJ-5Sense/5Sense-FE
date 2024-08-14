@@ -1,5 +1,4 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
-import { config } from 'process'
 
 const current = new Date()
 const checkToken = (accessTokenExp: string) => {
@@ -34,8 +33,14 @@ instance.interceptors.request.use(
       // 토큰 유효시간 검사
       if (accessTokenExp && checkToken(accessTokenExp) < 5) {
         try {
+          let apiAddress: string
+          if (window.location.port === '3000') {
+            apiAddress = `${process.env.NEXT_PUBLIC_IP_ADDRESS}/api/auth/reissue`
+          } else {
+            apiAddress = '/api/auth/reissue'
+          }
           const { data } = await axios.post(
-            process.env.NEXT_PUBLIC_IP_ADDRESS + '/auth/reissue',
+            apiAddress,
             {},
             {
               headers: {
@@ -51,7 +56,7 @@ instance.interceptors.request.use(
         }
       } else {
         // 탈퇴 회원 요청
-        if (config.url === '/auth/cancelMembership') {
+        if (config.url === '/api/auth/cancelMembership') {
           config.headers.Authorization = `Bearer ${refreshToken}`
         }
         config.headers.Authorization = `Bearer ${accessToken}`
@@ -72,8 +77,14 @@ instance.interceptors.response.use(
     /* 센터를 등록 응답을 받은 후에 다시 reissue 요청을 하고 토큰 값을 업데이트해야하기 때문에 response에 위치시킴 */
     if (url === '/centers' && method === 'post') {
       const refreshToken = localStorage.getItem('refreshToken')
+      let apiAddress: string
+      if (window.location.port === '3000') {
+        apiAddress = `${process.env.NEXT_PUBLIC_IP_ADDRESS}/api/auth/reissue`
+      } else {
+        apiAddress = '/api/auth/reissue'
+      }
       const { data } = await axios.post(
-        process.env.NEXT_PUBLIC_IP_ADDRESS + '/auth/reissue',
+        apiAddress,
         {},
         {
           headers: {

@@ -69,11 +69,11 @@ export default function StudentRegister() {
   const studentRigister = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (sessionSchedule.length !== 0) {
-      instance.post('/students', studentInfo).then((res: AxiosResponse) => {
+      instance.post('/api/students', studentInfo).then((res: AxiosResponse) => {
         const studentData = res.data.data
         const studentId = studentData.id
         instance
-          .post('/session-lesson-registrations', {
+          .post('/api/session-lesson-registrations', {
             studentId: studentId,
             lessonId: sessionSchedule[0].lessonId,
             paymentStatus: sessionSchedule[0].paymentStatus
@@ -85,7 +85,7 @@ export default function StudentRegister() {
               date: Number(sessionSchedule[0].sessionDate.split('.')[2])
             }
             instance
-              .post('/session-lesson-schedules', {
+              .post('/api/session-lesson-schedules', {
                 lessonId: sessionSchedule[0].lessonId,
                 studentId: studentId,
                 sessionDate: new Date(sessionDate.year, sessionDate.month, sessionDate.date).toISOString(),
@@ -99,11 +99,11 @@ export default function StudentRegister() {
           })
       })
     } else if (durationSchedule.length !== 0) {
-      instance.post('/students', studentInfo).then(res => {
+      instance.post('/api/students', studentInfo).then(res => {
         const studentData = res.data.data
         const studentId = studentData.id
         instance
-          .post('/duration-lesson-registrations', {
+          .post('/api/duration-lesson-registrations', {
             studentId: Number(studentId),
             lessonId: durationSchedule[0].classId,
             paymentStatus: durationSchedule[0].paymentStatus
@@ -113,7 +113,7 @@ export default function StudentRegister() {
           })
       })
     } else {
-      instance.post('/students', studentInfo).then(res => {
+      instance.post('/api/students', studentInfo).then(res => {
         router.push('/student')
       })
     }
@@ -165,6 +165,9 @@ export default function StudentRegister() {
                   value={studentInfo.phone}
                   onChange={onInputHandler}
                   maxLength={12}
+                  onWheel={e => {
+                    e.currentTarget.blur()
+                  }}
                 />
                 <div className="w-full text-right gray-500-normal text-sm font-['Inter']">
                   {studentInfo.phone.length}/12

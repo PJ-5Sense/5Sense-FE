@@ -1,13 +1,8 @@
 'use client'
-import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
-import Modal from '@/components/common/modal'
-import RegisterModal from '@/components/instructor/RegisterModal'
 import { useOnClickOutside } from '@/hooks/useOnclickOutside'
 import instance from '@/lib/api/axios'
-import { modalState } from '@/lib/state/modal'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
 
 import Close_Circle_bg from 'public/assets/icons/close_circle_bg_pri_600.svg'
 import SearchIcon from 'public/assets/icons/search.svg'
@@ -35,29 +30,24 @@ export default function SearchStudents({ handleChangeStudentId, classId }: IProp
 
   useOnClickOutside(inputClickRef, handleClickOutsideOfInput)
 
-  let [searchingName, setSearchingName] = useState<string>('')
-  let [checkInclude, setCheckInclude] = useState<boolean>(false)
-  let [openNameList, setOpenNameList] = useState<boolean>(false)
-  let [nameValue, setNameValue] = useState<string>('')
-
-  const emptyInput = () => {
-    setSearchingName('')
-  }
+  const [searchingName, setSearchingName] = useState<string>('')
+  const [checkInclude, setCheckInclude] = useState<boolean>(false)
+  const [openNameList, setOpenNameList] = useState<boolean>(false)
+  const [nameValue, setNameValue] = useState<string>('')
 
   const [nameList, setNameList] = useState<{ id: string; name: string; phone: string; sessionCount: string }[]>([])
 
   useEffect(() => {
-    instance(`/session-lessons/${classId}/details`).then(res => {
+    instance(`/api/session-lessons/${classId}/details`).then(res => {
       let studentsData = res.data.data.registeredStudents
       setNameList(studentsData)
-      instance(`/students/lessons/${classId}`).then(res => {
+      instance(`/api/students/lessons/${classId}`).then(res => {
         const studentsList = res.data.data
         for (var i = 0; i < studentsData.length; i++) {
           const compareValue = studentsList.filter(
             (data: { name: string; phone: string }) =>
               data.name === studentsData[i].name && data.phone === studentsData[i].phone
           )
-          console.log(compareValue)
           studentsData[i].id = compareValue[0].id
         }
       })
@@ -104,7 +94,6 @@ export default function SearchStudents({ handleChangeStudentId, classId }: IProp
           <div className=" w-full overflow-hidden">
             <div className="max-h-[185px] overflow-y-scroll">
               {nameList.map((data, index) => {
-                console.log(data)
                 const sessionCount = Number(data.sessionCount.split('/')[1]) - Number(data.sessionCount.split('/')[0])
 
                 if (data.name.includes(searchingName)) {

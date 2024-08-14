@@ -28,7 +28,8 @@ interface IProps {
   }
 }
 
-export default function UnbookedRoomReservatoin() {
+export default function UnbookedRoomReservatoin({ params }: { params: { id: string } }) {
+  const roomId = params.id
   const router = useRouter()
   const refs = useRef<(HTMLDivElement | null)[]>([])
   const centerInfo = useRecoilValue(centerInfoState)
@@ -43,8 +44,6 @@ export default function UnbookedRoomReservatoin() {
     id: 0,
     lessonTime: 0
   })
-  const [studentName, setStudentName] = useState<string>('')
-  const [category, setCategory] = useState<string>('')
   const [studentId, setStudentId] = useState(0)
   const [roomData, setRoomdata] = useState<any>([])
   const [clickedRoomData, setClickedRoomData] = useState<{
@@ -108,13 +107,14 @@ export default function UnbookedRoomReservatoin() {
   }
 
   const getRoomData = (classId: number, lessonTime: number) => {
-    const date = reservationData.reservationDate.split('.')
-    instance('/lesson-rooms/daily', {
+    const reservationDate = localStorage.getItem('reservationDate') as string
+    const date = reservationDate.split('.')
+    instance('/api/lesson-rooms/daily', {
       params: {
         date: new Date(Number(date[0]), Number(date[1]) - 1, Number(date[2])).toISOString()
       }
     }).then(res => {
-      const list = res.data.data
+      const list = res.data.data.filter((data: { id: number }) => data.id === Number(roomId))
       for (var i = 0; i < list.length; i++) {
         const test: any = []
         const keys = Object.keys(list[i].workTime)
@@ -154,7 +154,6 @@ export default function UnbookedRoomReservatoin() {
         }
         /* 선택한 클래스와 룸에 예약되어 있는 클래스가 다른 경우 처리 -> 룸에 에약되어있는 클래스가 있는 경우에만 처리 */
       }
-
       setRoomdata(list)
       /* 선택된 클래스와 해당 예약 시간대에 예약 가능 여부 */
       const startTime = {
@@ -162,16 +161,16 @@ export default function UnbookedRoomReservatoin() {
         min: reservationData.startTime.split(':')[1]
       }
       let indexOfStartTime = openTimeList.indexOf(startTime.hour.toString())
+      console.log(indexOfStartTime)
       if (startTime.min === '30') {
         indexOfStartTime = indexOfStartTime * 2 + 1
       } else {
         indexOfStartTime = indexOfStartTime * 2
       }
-      const selectedRoomData = list.filter((data: { id: number }) => data.id === Number(reservationData.roomId))[0]
       const indexOfEndTime = indexOfStartTime + lessonTime / 30
       const isBookingCheckList = []
       for (var i = indexOfStartTime; i < indexOfEndTime; i++) {
-        isBookingCheckList.push(selectedRoomData.workTime[i].isOpenForBooking)
+        isBookingCheckList.push(list[0].workTime[i].isOpenForBooking)
       }
       /* 예약 가능 여부 판단 */
       if (isBookingCheckList.includes(false)) {
@@ -203,15 +202,26 @@ export default function UnbookedRoomReservatoin() {
   }
 
   useEffect(() => {
-    setReservationData(prev => ({
-      ...prev,
-      reservationDate: localStorage.getItem('reservationDate') as string,
-      roomName: localStorage.getItem('className') as string,
-      roomId: localStorage.getItem('roomId') as string,
-      startTime: localStorage.getItem('reservationTime') as string
-    }))
+    /* parmas 통해서 roomData 가져오기 */
+    instance('/api/lesson-rooms/daily', {
+      params: {
+        date: new Date().toISOString()
+      }
+    }).then(res => {
+      const roomData = res.data.data
+      const targetRoom = roomData.filter((data: { id: number }) => data.id === Number(roomId))
+      setReservationData(prev => ({
+        ...prev,
+        roomId: roomId,
+        roomName: targetRoom[0].name,
+        reservationDate: localStorage.getItem('reservationDate') as string,
+        startTime: localStorage.getItem('reservationTime') as string
+      }))
+      getRoomData(0, 0)
+    })
 
-    instance(`/session-lessons`, {
+    /* 회차반 리스트 가죠오기 */
+    instance(`/api/session-lessons`, {
       params: {
         isCheckRegistrationsCount: true
       }
@@ -234,14 +244,13 @@ export default function UnbookedRoomReservatoin() {
   /* 각 룸의 다른 시간대 선택한 경우 */
   useEffect(() => {
     if (roomData.length !== 0) {
-      const selectedRoomData = roomData.filter((data: { id: number }) => data.id === Number(clickedRoomData.roomId))[0]
       const indexOfTime = {
         start: clickedRoomData.clickedTime,
         end: clickedRoomData.clickedTime + selectedClass.lessonTime / 30
       }
       const isBookingCheckList = []
       for (var i = indexOfTime.start; i < indexOfTime.end; i++) {
-        isBookingCheckList.push(selectedRoomData.workTime[i].isOpenForBooking)
+        isBookingCheckList.push(roomData[0].workTime[i].isOpenForBooking)
       }
       /* 예약 가능 여부 판단 */
       if (isBookingCheckList.includes(false)) {
@@ -251,6 +260,8 @@ export default function UnbookedRoomReservatoin() {
       }
     }
   }, [clickedRoomData])
+
+  console.log(clickedRoomData)
 
   return (
     <div className="w-full flex flex-col items-center">
@@ -404,7 +415,7 @@ export default function UnbookedRoomReservatoin() {
           onClick={() => {
             const date = reservationData.reservationDate.split('.')
             instance
-              .post('/session-lesson-schedules', {
+              .post('/api/session-lesson-schedules', {
                 lessonId: selectedClass.id,
                 studentId: studentId,
                 sessionDate: date && new Date(Number(date[0]), Number(date[1]) - 1, Number(date[2])).toISOString(),

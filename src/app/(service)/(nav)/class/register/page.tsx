@@ -13,6 +13,7 @@ import TextInput from '@/components/common/TextInput'
 import TextareaForm from '@/components/common/TextareaForm'
 import { postDurationLessons, postSessionLessons } from '@/lib/api/class'
 import { DurationScheduleType, durationClassScheduleState } from '@/lib/state/classDurationSchedule'
+import { durationClassName } from '@/lib/state/durationClassName'
 
 export type classDataType = {
   name: string
@@ -37,6 +38,7 @@ export default function RegisterPage() {
 
   const durationSchedule = useRecoilValue(durationClassScheduleState)
   const setDurationSchedule = useSetRecoilState(durationClassScheduleState)
+  const setDurationClassName = useSetRecoilState(durationClassName)
 
   const Props = useForm<classDataType>({
     defaultValues: {
@@ -126,6 +128,7 @@ export default function RegisterPage() {
   useEffect(() => {
     return () => {
       setDurationSchedule([])
+      setDurationClassName('')
     }
   }, [])
 
@@ -151,9 +154,10 @@ export default function RegisterPage() {
       } else {
         clearErrors('schedules')
       }
-
       handleSubmit(onValid, onInvalid)(event)
     }
+
+  setDurationClassName(watch('name'))
 
   return (
     <div className="flex flex-col items-center pb-[60px]">

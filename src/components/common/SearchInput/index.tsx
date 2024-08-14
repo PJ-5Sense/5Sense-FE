@@ -1,9 +1,8 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 import instance from '@/lib/api/axios'
 
-import { studentType, metaType } from '@/app/(service)/(nav)/student/page'
-import { PaymentType } from '@/app/(service)/(nav)/pay/page'
+import { metaType } from '@/app/(service)/(nav)/student/page'
 
 import SearchIconWhite from 'public/assets/icons/search_white.svg'
 
@@ -37,7 +36,7 @@ export default function SearchInput(props: IProps) {
     }
     if (props.type === 'payment') {
       instance(
-        `/billing-payments?searchBy=${searchBy}&${searchBy}=${inputValue}&PaymentStatus=${props.paymentStatus}`
+        `/api/billing-payments?searchBy=${searchBy}&${searchBy}=${inputValue}&PaymentStatus=${props.paymentStatus}`
       ).then(res => {
         const data = res.data.data.billingPayments
         const meta = res.data.data.meta
@@ -45,7 +44,7 @@ export default function SearchInput(props: IProps) {
         props.passInputData({ value: inputValue, searchBy: searchBy, list: data, meta: meta })
       })
     } else {
-      instance(`/${props.type}?searchBy=${searchBy}&${searchBy}=${inputValue}`).then(res => {
+      instance(`/api/${props.type}?searchBy=${searchBy}&${searchBy}=${inputValue}`).then(res => {
         const data = props.type === 'teachers' ? res.data.data.teachers : res.data.data.students
         const meta = res.data.data.meta
 
@@ -59,8 +58,6 @@ export default function SearchInput(props: IProps) {
       handleClickSearch()
     }
   }
-
-  console.log(inputValue)
 
   return (
     <div className="flex gap-2.5 lg:w-[377px] lg:h-[42px] w-[326px] h-[37px] mb-5">

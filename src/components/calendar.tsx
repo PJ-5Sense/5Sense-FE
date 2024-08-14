@@ -1,5 +1,3 @@
-//import { twMerge } from 'tailwind-merge'
-
 interface CheckboxProps {
   className?: string
 }

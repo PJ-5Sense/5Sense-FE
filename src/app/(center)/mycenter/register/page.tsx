@@ -214,6 +214,7 @@ export default function MyCenter() {
                 value={postData.mainPhone}
                 className="text-input"
                 onChange={e => setPostData(prev => ({ ...prev, mainPhone: e.target.value }))}
+                onWheel={e => e.currentTarget.blur()}
               />
             </div>
             <div className={inputBox}>

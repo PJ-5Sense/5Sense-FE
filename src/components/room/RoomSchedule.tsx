@@ -104,6 +104,7 @@ export default function RoomSchedule({ roomScheduleData, indexOfRoomList }: IPro
                           )} p-1.5 border border-1 border-gray-200 flex items-center justify-center`}
                         >
                           {data.id !== null ? (
+                            /* 해당 시간에 예약된 클래스가 있는 경우 */
                             <div
                               className={`relative w-full h-full p-1.5 ${
                                 data.type === 'duration'
@@ -164,9 +165,7 @@ export default function RoomSchedule({ roomScheduleData, indexOfRoomList }: IPro
                                     font-semibold lg:text-sm text-xs text-center`}
                                       onClick={() => {
                                         if (data.isOpenForBooking) {
-                                          router.push('/room/reservation/booked')
-                                          localStorage.setItem('roomId', roomId)
-                                          localStorage.setItem('roomName', roomName)
+                                          router.push(`/room/reservation/booked/${roomId}`)
                                           localStorage.setItem('className', data.name)
                                           localStorage.setItem('reservationTime', data.time)
                                           localStorage.setItem(
@@ -185,20 +184,17 @@ export default function RoomSchedule({ roomScheduleData, indexOfRoomList }: IPro
                               </div>
                             </div>
                           ) : (
+                            /* 해당 시간에 예약된 클래스가 없는 경우 */
                             <button
                               className="lg:w-[75px] lg:h-[39px] w-[68px] h-[36px] flex items-center px-3 py-2 border rounded-lg border-1 border-gray-200
                              gray-800-semibold lg:text-sm text-xs hover:text-primary-600"
                               onClick={() => {
-                                router.push('/room/reservation/unbooked')
-                                localStorage.setItem('roomId', roomId)
-                                localStorage.setItem('roomName', roomName)
+                                router.push(`/room/reservation/unbooked/${roomId}`)
                                 localStorage.setItem('reservationTime', data.time)
                                 localStorage.setItem(
                                   'reservationDate',
                                   `${calendarDate.year}.${calendarDate.month + 1}.${calendarDate.date}`
                                 )
-                                //localStorage.setItem('classId', data.id)
-                                //localStorage.setItem('lessonTime', data.lessonTime)
                               }}
                             >
                               예약하기

@@ -6,6 +6,7 @@ interface IProps {
   toggleStatus: boolean
   onCloseSnsModal: () => void
 }
+
 export default function SnsConnection({ toggleStatus, onCloseSnsModal }: IProps) {
   const setModal = useSetRecoilState(modalState)
   return (

@@ -1,19 +1,14 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
-import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import NotFoundPage from '@/components/common/NotFoundPage'
 import Loading from '@/components/common/Loading'
-import Modal from '@/components/common/modal'
-import { modalState } from '@/lib/state/modal'
 import instance from '@/lib/api/axios'
 import ContentHeader from '@/components/common/ContentHeader'
 import SearchInput from '@/components/common/SearchInput'
 import ListInfo from '@/components/view/ListInfo'
-import { PaymentType } from '../pay/page'
 import List from '@/components/view/List'
-import { studentForClass } from '@/lib/state/studentForClass'
 import { Drawer } from 'flowbite-react'
 import StudentsDetail from '@/components/studentsDetail/studentsDetail'
 
@@ -40,8 +35,6 @@ export default function StudentPage() {
   const router = useRouter()
   const target = useRef<HTMLDivElement>(null)
 
-  const setModal = useSetRecoilState(modalState)
-  const setStudentForClass = useSetRecoilState(studentForClass)
   const [targetedStudentData, setTargetedStudent] = useState({
     id: '',
     name: '',
@@ -83,8 +76,61 @@ export default function StudentPage() {
     }))
   }
 
+  const infiniteScroll = useCallback(() => {
+    const getData = () => {
+      if (inputData.value === '') {
+        instance(`/api/students?searchBy=none&page=${metaData.page + 1}`).then(res => {
+          const studentsData = res.data.data.students
+          const meta = res.data.data.meta
+          setStudentList(prev => [...prev, ...studentsData])
+          setMetaData(prev => ({
+            ...prev,
+            page: meta.page,
+            hasNextPage: meta.hasNextPage
+          }))
+          setIsLoading(false)
+        })
+      } else {
+        instance(
+          `/api/students?searchBy=${inputData.searchBy}&${inputData.searchBy}=${inputData.value}&page=${metaData.page + 1}`
+        ).then(res => {
+          const studentsData = res.data.data.students
+          const meta = res.data.data.meta
+          setStudentList(prev => [...prev, ...studentsData])
+          setMetaData(prev => ({
+            ...prev,
+            page: meta.page,
+            hasNextPage: meta.hasNextPage
+          }))
+          setIsLoading(false)
+        })
+      }
+    }
+
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 1.0
+    }
+
+    const callback = (entry: any) => {
+      if (entry[0].isIntersecting) {
+        setIsLoading(true)
+        setTimeout(() => {
+          getData()
+        }, 500)
+      }
+    }
+
+    const observer = new IntersectionObserver(callback, options)
+
+    if (target.current) {
+      observer.observe(target.current)
+    }
+  }, [metaData])
+
   useEffect(() => {
-    instance('/students?searchBy=none&page=1&take=10').then(res => {
+    instance('/api/students?searchBy=none&page=1&take=10').then(res => {
       const studentsData = res.data.data.students
       const meta = res.data.data.meta
       setStudentList(studentsData)
@@ -99,62 +145,7 @@ export default function StudentPage() {
 
   useEffect(() => {
     if (metaData.hasNextPage) {
-      const options = {
-        root: null,
-        rootMargin: '0px',
-        threshold: 1.0
-      }
-
-      const getData = () => {
-        if (inputData.value === '') {
-          instance(`/students?searchBy=none&page=${metaData.page + 1}`).then(res => {
-            const studentsData = res.data.data.students
-            const meta = res.data.data.meta
-            setStudentList(prev => [...prev, ...studentsData])
-            setMetaData(prev => ({
-              ...prev,
-              page: meta.page,
-              hasNextPage: meta.hasNextPage
-            }))
-            setIsLoading(false)
-          })
-        } else {
-          instance(
-            `/students?searchBy=${inputData.searchBy}&${inputData.searchBy}=${inputData.value}&page=${
-              metaData.page + 1
-            }`
-          ).then(res => {
-            const studentsData = res.data.data.students
-            const meta = res.data.data.meta
-            setStudentList(prev => [...prev, ...studentsData])
-            setMetaData(prev => ({
-              ...prev,
-              page: meta.page,
-              hasNextPage: meta.hasNextPage
-            }))
-            setIsLoading(false)
-          })
-        }
-      }
-
-      const callback = (entry: any) => {
-        if (entry[0].isIntersecting) {
-          setIsLoading(true)
-          setTimeout(() => {
-            getData()
-          }, 500)
-        }
-      }
-      const observer = new IntersectionObserver(callback, options)
-      if (target.current) {
-        observer.observe(target.current)
-      }
-
-      return () => {
-        if (observer && target.current) {
-          observer.unobserve(target.current)
-        }
-      }
+      infiniteScroll()
     }
   }, [metaData])
 
@@ -193,11 +184,6 @@ export default function StudentPage() {
                       lessons: lessons
                     }))
                     setIsOpenDetail(true)
-                    localStorage.setItem('studentId', id)
-                    /* setStudentForClass(prev => ({
-                    ...prev,
-                    id: id
-                  })) */
                   }}
                 />
               )

@@ -37,6 +37,5 @@ export default function RoomDataFormatter(data: any) {
       data.push({})
     }
     return [data]
-    //setRoom([data])
   }
 }

@@ -5,9 +5,9 @@ import instance from '@/lib/api/axios'
 import { calculateEndTime, formatDate } from '@/utils'
 import { AddSessionState } from '@/lib/state/addSessionState'
 
-export default function SessionReservationCard() {
+export default function SessionReservationCard({ roomId }: { roomId: string }) {
   const setAddSessionState = useSetRecoilState(AddSessionState)
-  const [classData, setClasData] = useState({
+  const [classData, setClassData] = useState({
     category: '',
     className: '',
     instructorName: '',
@@ -25,14 +25,27 @@ export default function SessionReservationCard() {
 
   useEffect(() => {
     const classId = localStorage.getItem('classId') as string
-    const roomName = localStorage.getItem('roomName') as string
-    const roomId = localStorage.getItem('roomId') as string
     const reservationDate = localStorage.getItem('reservationDate') as string
     const reservationTime = localStorage.getItem('reservationTime') as string
 
-    instance(`/session-lessons/${classId}/details`).then(res => {
+    instance('/api/lesson-rooms/daily', {
+      params: {
+        date: new Date().toISOString()
+      }
+    }).then(res => {
+      const roomData = res.data.data
+      const targetRoom = roomData.filter((data: { id: number }) => data.id === Number(roomId))
+      console.log(targetRoom)
+      setReservationData(prev => ({
+        ...prev,
+        roomId: roomId,
+        roomName: targetRoom[0].name
+      }))
+    })
+
+    instance(`/api/session-lessons/${classId}/details`).then(res => {
       const classDetail = res.data.data
-      setClasData(prev => ({
+      setClassData(prev => ({
         ...prev,
         category: classDetail.category.subName === null ? classDetail.category.name : classDetail.category.subName,
         className: classDetail.name,
@@ -41,8 +54,6 @@ export default function SessionReservationCard() {
       }))
       setReservationData(prev => ({
         ...prev,
-        roomName: roomName,
-        roomId: roomId,
         classId: classId,
         reservationdDate: reservationDate,
         reservationTime: reservationTime
@@ -60,6 +71,12 @@ export default function SessionReservationCard() {
         roomId: Number(roomId)
       }))
     })
+
+    return () => {
+      localStorage.removeItem('classId')
+      localStorage.removeItem('reservationDate')
+      localStorage.removeItem('reservationTime')
+    }
   }, [])
 
   return (

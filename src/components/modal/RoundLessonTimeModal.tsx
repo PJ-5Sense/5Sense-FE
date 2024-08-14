@@ -1,6 +1,4 @@
 'use client'
-import Image from 'next/image'
-
 import MinusIcon from 'public/assets/icons/minus_vector.svg'
 import PlusIcon from 'public/assets/icons/plus_vector.svg'
 import { useState } from 'react'

@@ -21,51 +21,9 @@ export default function PeriodLessonTimeModal(props: IProps) {
     date: ''
   })
 
-  const getTimeList = () => {
-    const list = []
-    for (var i = 16; i <= 44; i++) {
-      let standard = i * 30
-      let hour: string | number = Math.floor(standard / 60)
-      let min: string | number = standard % 60
-      if (hour < 10) {
-        hour = `0${hour}`
-      }
-      if (min === 0) {
-        min = `0${min}`
-      }
-      let time = `${hour}:${min}`
-      list.push(time)
-    }
-    return list
-  }
-
-  const startTimeDropdownProps = {
-    title: '시',
-    list: getTimeList()
-  }
-
-  const endTimeDropdownProps = {
-    title: '시',
-    list: getTimeList()
-  }
-
   const dateDropdownProps = {
     title: '요일 선택',
     list: ['월', '화', '수', '목', '금', '토', '일']
-  }
-
-  const handleChangeStartTimeFromChild = (data: { time: string }) => {
-    setPostData(prevPostData => ({
-      ...prevPostData,
-      openTime: data.time
-    }))
-  }
-
-  const handleChangeCloseTimeFromChild = (data: { time: string }) => {
-    setPostData(prevPostData => ({
-      ...prevPostData,
-      closeTime: data.time
-    }))
   }
 
   const handleChangeLessonTimeFromChild = (data: string) => {

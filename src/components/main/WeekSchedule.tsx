@@ -7,12 +7,6 @@ import WeekDataFormatter from './DataFormatter/WeekDataFormatter'
 import { WeekCalendarDateState } from '@/lib/state/calendar/WeekCalendarDateState'
 import instance from '@/lib/api/axios'
 import { WeekDetailClassState } from '@/lib/state/weekDetailClassState'
-import { getSesstionLessons } from '@/lib/api/class'
-
-interface IProps {
-  dateData: dateDataType
-  week: number
-}
 
 export default function WeekSchedule() {
   const setDetailClassState = useSetRecoilState(WeekDetailClassState)
@@ -44,7 +38,7 @@ export default function WeekSchedule() {
   const [lessonData, setLessonData] = useState<any>([])
 
   useEffect(() => {
-    instance(`/lessons/${weekData.year}/${weekData.month + 1}`).then(res => {
+    instance(`/api/lessons/${weekData.year}/${weekData.month + 1}`).then(res => {
       const data = res.data.data
       setLessonData(WeekDataFormatter(data, weekData))
     })
@@ -99,9 +93,6 @@ export default function WeekSchedule() {
                                     id: data.id,
                                     type: data.type
                                   }))
-                                  /* instance.get(`/session-lessons/${data.id}/details`).then(res => {
-                                    console.log(res)
-                                  }) */
                                 }}
                               >
                                 {mouseOverId === `${pI}` + `${cI}` + i.toString() && (

@@ -106,7 +106,7 @@ export default function WithDrawal() {
               const formData = new FormData()
               formData.append(`${type}`, please)
               instance
-                .delete(`/auth/cancelMembership`, { data: formData })
+                .delete(`/api/auth/cancelMembership`, { data: formData })
                 .then(res => {
                   console.log(res)
                   localStorage.clear()

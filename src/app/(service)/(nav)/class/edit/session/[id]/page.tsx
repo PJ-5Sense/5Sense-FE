@@ -13,6 +13,7 @@ import TextInput from '@/components/common/TextInput'
 import TextareaForm from '@/components/common/TextareaForm'
 import { getSesstionLessons, putDurationLessons, putSesstionLessons } from '@/lib/api/class'
 import { DurationScheduleType, durationClassScheduleState } from '@/lib/state/classDurationSchedule'
+import { sessionScheduleState } from '@/lib/state/studentSessionSchedule'
 
 export type classDataType = {
   name: string
@@ -41,6 +42,8 @@ export default function RegisterPage() {
 
   const durationSchedule = useRecoilValue(durationClassScheduleState)
   const setDurationSchedule = useSetRecoilState(durationClassScheduleState)
+  const sessionScheduele = useRecoilValue(sessionScheduleState)
+  const setSessionSchedule = useSetRecoilState(sessionScheduleState)
 
   const Props = useForm<classDataType>({
     defaultValues: {
@@ -113,7 +116,7 @@ export default function RegisterPage() {
 
   useEffect(() => {
     return () => {
-      setDurationSchedule([])
+      setSessionSchedule([])
     }
   }, [])
 

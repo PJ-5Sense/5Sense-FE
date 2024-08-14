@@ -1,17 +1,10 @@
 'use client'
-import Image from 'next/image'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { dateDataType } from './dayDatePIcker'
-import { getCalendarData } from '../getCalendarData'
+import { GetCalendarData } from '../getCalendarData'
 import AllowLeftIcon from 'public/assets/icons/allow_left.svg'
 import AllowRightIcon from 'public/assets/icons/allow_right.svg'
-
-interface clickedDateType {
-  year: undefined | number
-  month: undefined | number
-  date: undefined | number
-}
 
 interface IProps {
   changeParentDateData: (
@@ -23,10 +16,7 @@ interface IProps {
 export default function PeriodDatePicker(props: IProps) {
   const currentDate = new Date()
   const dateName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-  const currentdateData = {
-    year: currentDate.getFullYear(),
-    month: currentDate.getMonth()
-  }
+
   const [firstDateData, setFirstDateData] = useState<dateDataType>({
     year: currentDate.getFullYear(),
     month: currentDate.getMonth(),
@@ -40,9 +30,9 @@ export default function PeriodDatePicker(props: IProps) {
   })
 
   let firstDateList
-  firstDateList = getCalendarData(firstDateData, 'addClass')
+  firstDateList = GetCalendarData(firstDateData, 'addClass')
 
-  const secondDateList = getCalendarData(secondDateData)
+  const secondDateList = GetCalendarData(secondDateData)
   const [firstClickedData, setFirstClickedData] = useState<{
     year: number | undefined
     month: number | undefined
@@ -169,9 +159,6 @@ export default function PeriodDatePicker(props: IProps) {
     }
   }
 
-  console.log('first', firstClickedData)
-  console.log('second', secondClickedData)
-
   return (
     <div className="w-[592px] bg-white p-4 flex gap-6 rounded-lg border border-1 border-primary-600 shadow">
       {/* 첫 번째 달력 */}
@@ -212,7 +199,6 @@ export default function PeriodDatePicker(props: IProps) {
                   const sorted = firstClickedData.date.sort()
                   first = sorted[0]
                   second = sorted[1]
-                  console.log(i, first, second, dateData)
                   return (
                     <div
                       key={i}
@@ -462,7 +448,6 @@ export default function PeriodDatePicker(props: IProps) {
                   const sorted = firstClickedData.date.sort()
                   first = sorted[0]
                   second = sorted[1]
-                  console.log(i, first, second, dateData)
                   return (
                     <div
                       key={i}

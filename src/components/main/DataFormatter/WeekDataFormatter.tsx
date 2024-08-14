@@ -1,5 +1,4 @@
-import { dateDataType } from "@/components/common/calendar/datePicker/dayDatePIcker"
-
+import { dateDataType } from '@/components/common/calendar/datePicker/dayDatePIcker'
 
 export default function WeekDataFormatter(data: any, dateData: dateDataType) {
   const formatData = []
@@ -118,6 +117,5 @@ export default function WeekDataFormatter(data: any, dateData: dateDataType) {
       resultList[k][i].classData.sort((a: any, b: any) => a.index - b.index)
     }
   }
-  console.log(resultList)
   return resultList
 }

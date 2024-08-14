@@ -13,6 +13,7 @@ import TextInput from '@/components/common/TextInput'
 import TextareaForm from '@/components/common/TextareaForm'
 import { getDurationLessons, putDurationLessons } from '@/lib/api/class'
 import { DurationScheduleType, durationClassScheduleState } from '@/lib/state/classDurationSchedule'
+import { calculateLessonTime } from '@/utils'
 
 export type classDataType = {
   name: string
@@ -81,8 +82,14 @@ export default function RegisterPage() {
 
     const subSchedule = data.schedules.map(({ room, ...rest }) => rest)
 
+    let isUpdatedDurationScehdule: boolean
+    if ('room' in durationSchedule[0]) {
+      isUpdatedDurationScehdule = false
+    } else {
+      isUpdatedDurationScehdule = true
+    }
     console.log('data', subSchedule)
-
+    console.log('lessonTime', calculateLessonTime(durationSchedule[0].startTime, durationSchedule[0].endTime))
     const requestData = {
       name: data.name,
       memo: data.memo,
@@ -92,7 +99,18 @@ export default function RegisterPage() {
         name: categoryName
       },
       teacherId: data.teacherId,
-      schedules: subSchedule[0]
+      schedules: [
+        {
+          id: Number(params.id),
+          startTime: durationSchedule[0].startTime,
+          endTime: durationSchedule[0].endTime,
+          repeatDate: durationSchedule[0].repeatDate,
+          lessonTime: isUpdatedDurationScehdule
+            ? durationSchedule[0].lessonTime
+            : calculateLessonTime(durationSchedule[0].startTime, durationSchedule[0].endTime),
+          roomId: isUpdatedDurationScehdule ? durationSchedule[0].roomId : durationSchedule[0].room.id
+        }
+      ]
     }
     const result = await putDurationLessons(params.id as string, requestData)
     if (result.success) {

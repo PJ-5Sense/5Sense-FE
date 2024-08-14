@@ -31,7 +31,7 @@ export default function AddRoom() {
         onSubmit={e => {
           e.preventDefault()
           instance
-            .post('lesson-rooms', {
+            .post('/api/lesson-rooms', {
               name: roomName,
               capacity: permissonNum
             })

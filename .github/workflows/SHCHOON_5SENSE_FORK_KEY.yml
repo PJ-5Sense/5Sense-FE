@@ -1,0 +1,32 @@
+name: Synchronize to forked repo - deploy
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  sync:
+    name: Sync forked repo
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout deploy
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.FORKED_REPO_TOKEN }}
+          fetch-depth: 0
+          ref: deploy
+
+      - name: Add remote-url
+        run: |
+          git remote add forked-repo https://shchoon:${{ secrets.FORKED_REPO_TOKEN }}@github.com/shchoon/5Sense-FE
+          git config user.name shchoon
+          git config user.email acckr0604@gmail.com
+
+      - name: Push changes to forked-repo
+        run: |
+          git push -f forked-repo deploy
+
+      - name: Clean up
+        run: |
+          git remote remove forked-repo

@@ -37,7 +37,6 @@ export default function ClassFilter() {
   })
 
   const [classType, setClassType] = useState<string>('')
-  const [checkedNameList, setCheckedNameList] = useState<string[]>([])
   const [categoryList, setCategoryList] = useState<categoryType>({
     mainCategory: [],
     subCategory: []
@@ -72,12 +71,6 @@ export default function ClassFilter() {
         mainClass: data.title,
         mainClassId: data.id
       }))
-      /* if (categoryData.subClass !== '') {
-        setFilterState(prev => ({
-          ...prev,
-          subCategoryId: ''
-        }))
-      } */
     } else if (type === 'sub') {
       setCategoryData(prev => ({
         ...prev,
@@ -192,7 +185,7 @@ export default function ClassFilter() {
   }
 
   useEffect(() => {
-    instance.get('/lesson-categories').then(res => {
+    instance('/api/lesson-categories').then(res => {
       const data: categoryType = res.data.data
       const mainCategory = data.mainCategory.toSorted((a, b) => sortedMainCategory(a))
       setCategoryList(prev => ({

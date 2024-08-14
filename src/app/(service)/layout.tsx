@@ -73,7 +73,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   }
 
   useEffect(() => {
+    const accessToken = localStorage.getItem('accessToken')
     getCenterInfoData()
+    if (accessToken === null) {
+      router.push('/login')
+      return
+    }
   }, [])
 
   return (

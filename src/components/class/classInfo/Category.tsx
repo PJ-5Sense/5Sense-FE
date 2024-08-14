@@ -193,18 +193,12 @@ export default function Category({
                 render={({ field }) => (
                   <div
                     key={option.id}
+                    onClick={() => handleOptionChange(option.id, option.name)}
                     className={`relative flex justify-center items-center w-[142px] h-[45px] p-3 rounded-md border border-indigo-400 ${
                       field.value === option.id ? 'bg-[#F0EFFF]' : 'bg-white cursor-pointer'
                     }`}
                   >
-                    <input
-                      required
-                      type="radio"
-                      id={option.name}
-                      value={option.name}
-                      className="hidden"
-                      onClick={() => handleOptionChange(option.id, option.name)}
-                    />
+                    <input required type="radio" id={option.name} value={option.name} className="hidden" />
                     <label
                       htmlFor={option.name}
                       className={`text-base font-medium leading-normal text-primary-600 cursor-pointer`}

@@ -11,10 +11,10 @@ import PlusIcon from 'public/assets/icons/plus.svg'
 import SearchIcon from 'public/assets/icons/search.svg'
 import UserCircle from 'public/assets/icons/user_circle.svg'
 import VecterIcon from 'public/assets/icons/vector.svg'
-import { ITeacherInfo } from '@/app/(service)/(nav)/class/edit/session/[id]/page'
+//import { ITeacherInfo } from '@/app/(service)/(nav)/class/edit/session/[id]/page'
 
 interface IProps {
-  teacherInfo?: ITeacherInfo
+  teacherInfo?: any
   onChange: (value: string) => void
   valid: boolean
 }
@@ -52,7 +52,7 @@ export default function TeacherInfo({ onChange, valid, teacherInfo }: IProps) {
 
   const [teacherList, setTeacherList] = useState<{ id: string; name: string; phone: string }[]>([])
   useEffect(() => {
-    instance('/teachers?searchBy=none&take=100').then(res => {
+    instance('/api/teachers?searchBy=none&take=100').then(res => {
       setTeacherList(res.data.data.teachers)
     })
   }, [isClickedAddTeacher])

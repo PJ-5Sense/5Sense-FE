@@ -28,8 +28,8 @@ interface snsLinkType {
 }
 
 export default function ManageMent() {
- const centerInfo = useRecoilValue(centerInfoState)
- const setCenterInfo = useSetRecoilState(centerInfoState)
+  const centerInfo = useRecoilValue(centerInfoState)
+  const setCenterInfo = useSetRecoilState(centerInfoState)
   const [patchData, setPatchData] = useState({
     name: '',
     address: '',
@@ -139,7 +139,7 @@ export default function ManageMent() {
   const handleClickPatch = () => {
     instance
       .patch(
-        '/centers',
+        '/api/centers',
         { ...checkDiff() },
         {
           headers: {
@@ -187,7 +187,7 @@ export default function ManageMent() {
   ]
 
   useEffect(() => {
-    instance.get('/centers/my').then((res) => {
+    instance('/api/centers/my').then(res => {
       const centerData = res.data.data
       setDropDownProps(prev => ({
         ...prev,
@@ -200,14 +200,15 @@ export default function ManageMent() {
           title: centerData.close
         }
       }))
-      setCenterInfo(prev => ({...centerData}))
-      setPatchData(prev => ({...centerData}))
+      setCenterInfo(prev => ({ ...centerData }))
+      setPatchData(prev => ({ ...centerData }))
     })
   }, [])
 
   return (
     <>
-       {patchData.name !== '' &&  <div className="w-[640px] flex flex-col gap-5 justify-center">
+      {patchData.name !== '' && (
+        <div className="w-[640px] flex flex-col gap-5 justify-center">
           <Script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></Script>
           <form
             className="w-full px-6 py-8 flex flex-col rounded-xl border border-gray-200 items-start gap-10"
@@ -220,7 +221,7 @@ export default function ManageMent() {
             <div className="w-full flex flex-col items-center gap-10">
               <div className="w-[140px] h-[156px] flex flex-col items-center gap-[-18px]">
                 <div className="w-[140px] h-[140px] ">
-                    <Image src={patchData.profile} className="rounded-full" width={140} height={140} alt="profile" />
+                  <Image src={patchData.profile} className="rounded-full" width={140} height={140} alt="profile" />
                 </div>
                 <div className="bg-white w-[70px] h-[34px] pl-2.5 pr-3 py-2 flex justify-center rounded-lg border border-primary-600">
                   <input
@@ -246,44 +247,43 @@ export default function ManageMent() {
                 </div>
               </div>
               <div className="w-full flex flex-col gap-4">
-                {inputList.map((data,i) => {
+                {inputList.map((data, i) => {
                   return (
-                    <div className='w-full flex flex-col gap-2' key={i}>
-                  <span className='text-base gray-800-semibold'>{data.title}</span>
-                <input
-                  name={data.name}
-                  value={data.value}
-                  onChange={e => {
-                    onChangeHandler(e)
-                  }}
-                  className="w-full h-[52px] px-4 border rounded-lg border-gray-200 focus:outline-none focus:border-primary-700 focus:bg-gray-50"
-                  placeholder={data.placeholder}
-                />
-                </div>
+                    <div className="w-full flex flex-col gap-2" key={i}>
+                      <span className="text-base gray-800-semibold">{data.title}</span>
+                      <input
+                        name={data.name}
+                        value={data.value}
+                        onChange={e => {
+                          onChangeHandler(e)
+                        }}
+                        className="w-full h-[52px] px-4 border rounded-lg border-gray-200 focus:outline-none focus:border-primary-700 focus:bg-gray-50"
+                        placeholder={data.placeholder}
+                      />
+                    </div>
                   )
                 })}
-                <div className='w-full flex flex-col gap-2'>
-                <span className='text-base gray-800-semibold'>영업시간</span>
+                <div className="w-full flex flex-col gap-2">
+                  <span className="text-base gray-800-semibold">영업시간</span>
                   <div className="flex gap-3">
-                    <div className='w-full flex gap-2 items-center'>
-                    <DropDown
-                      {...dropDownProps.open}
-                      handleChangeParentsOpenTimeData={handleChangeDropwdownFromChild}
-                      type="open"
-                    />
-                    <span className='text-[14px] gray-800-normal'>부터</span>
+                    <div className="w-full flex gap-2 items-center">
+                      <DropDown
+                        {...dropDownProps.open}
+                        handleChangeParentsOpenTimeData={handleChangeDropwdownFromChild}
+                        type="open"
+                      />
+                      <span className="text-[14px] gray-800-normal">부터</span>
                     </div>
-                    <div className='w-full flex gap-2 items-center'>
-                    <DropDown
-                      {...dropDownProps.close}
-                      handleChangeParentsCloseTimeData={handleChangeCloseTimeFromChild}
-                      type="close"
-                    />
-                    <span className='text-[14px] gray-800-normal'>까지</span>
+                    <div className="w-full flex gap-2 items-center">
+                      <DropDown
+                        {...dropDownProps.close}
+                        handleChangeParentsCloseTimeData={handleChangeCloseTimeFromChild}
+                        type="close"
+                      />
+                      <span className="text-[14px] gray-800-normal">까지</span>
                     </div>
                   </div>
                 </div>
-                
               </div>
               <button type="submit" className="w-full h-[52px] btn-purple">
                 수정하기
@@ -446,7 +446,8 @@ export default function ManageMent() {
               <SnsConnection toggleStatus={toggleStatus} onCloseSnsModal={onCloseSnsModal} />
             </Modal>
           )} */}
-        </div>}
+        </div>
+      )}
     </>
   )
 }

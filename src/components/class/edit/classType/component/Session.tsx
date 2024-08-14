@@ -37,18 +37,18 @@ export default function Session({ classType, setClassType, valid }: ITypeProps) 
     const removedCommaValue = value.replaceAll(',', '')
 
     if (isNaN(Number(removedCommaValue))) {
-      return setClassType(prev => ({ ...prev, tuitionFee: '' }))
+      return setClassType((prev: any) => ({ ...prev, tuitionFee: '' }))
     }
-    setClassType(prev => ({ ...prev, tuitionFee: Number(removedCommaValue.slice(0, 9)).toLocaleString() }))
+    setClassType((prev: any) => ({ ...prev, tuitionFee: Number(removedCommaValue.slice(0, 9)).toLocaleString() }))
   }
 
   const handleCnt = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
 
     if (isNaN(Number(value))) {
-      return setClassType(prev => ({ ...prev, totalSessions: '' }))
+      return setClassType((prev: any) => ({ ...prev, totalSessions: '' }))
     }
-    setClassType(prev => ({ ...prev, totalSessions: value }))
+    setClassType((prev: any) => ({ ...prev, totalSessions: value }))
   }
 
   const sumTuitionFee = (tutionFee: string, cnt: string) => {
@@ -60,17 +60,17 @@ export default function Session({ classType, setClassType, valid }: ITypeProps) 
 
   const handleLessonTime = (type: string) => {
     if (type === 'plus') {
-      setClassType(prev => ({ ...prev, lessonTime: prev.lessonTime + 30 }))
+      setClassType((prev: any) => ({ ...prev, lessonTime: prev.lessonTime + 30 }))
     } else {
-      setClassType(prev => ({ ...prev, lessonTime: prev.lessonTime - 30 }))
+      setClassType((prev: any) => ({ ...prev, lessonTime: prev.lessonTime - 30 }))
     }
   }
 
   const handleStudentCnt = (type: string) => {
     if (type === 'plus') {
-      setClassType(prev => ({ ...prev, capacity: prev.capacity + 1 }))
+      setClassType((prev: any) => ({ ...prev, capacity: prev.capacity + 1 }))
     } else {
-      setClassType(prev => ({ ...prev, capacity: prev.capacity - 1 }))
+      setClassType((prev: any) => ({ ...prev, capacity: prev.capacity - 1 }))
     }
   }
 

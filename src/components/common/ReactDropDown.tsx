@@ -1,8 +1,4 @@
 'use client'
-
-//import { Dropdown } from 'flowbite-react'
-import Image from 'next/image'
-import chevronDown from 'public/assets/icons/chevron_down_gray.svg'
 import React, { useState } from 'react'
 
 interface DropDownPropsType {
